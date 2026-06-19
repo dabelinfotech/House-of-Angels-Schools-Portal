@@ -255,6 +255,8 @@ async function loadSettingsForm() {
 
     // Load admins
     loadAdminsList();
+    // Load current admin's email
+    loadMyEmail();
   } catch (_) {}
 }
 
@@ -1103,6 +1105,7 @@ async function loadAdminsList() {
 
 function openAddAdminModal() {
   document.getElementById('new-admin-name').value     = '';
+  document.getElementById('new-admin-email').value    = '';
   document.getElementById('new-admin-username').value = '';
   document.getElementById('new-admin-password').value = '';
   document.getElementById('new-admin-role').value     = 'admin';
@@ -1219,6 +1222,7 @@ async function saveStaffAssignments() {
 
 async function submitAddAdmin() {
   const name     = document.getElementById('new-admin-name').value.trim();
+  const email    = document.getElementById('new-admin-email').value.trim();
   const username = document.getElementById('new-admin-username').value.trim();
   const password = document.getElementById('new-admin-password').value;
   const role     = document.getElementById('new-admin-role').value;
@@ -1231,7 +1235,7 @@ async function submitAddAdmin() {
     const res  = await fetch('/api/admin/admins', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password, full_name: name, role })
+      body: JSON.stringify({ username, password, full_name: name, role, email: email || undefined })
     });
     const data = await res.json();
     if (data.success && role === 'staff') {
@@ -1306,6 +1310,38 @@ async function changePassword() {
     }
   } catch (_) {
     msgEl.className = 'msg-error'; msgEl.textContent = 'Error updating password.'; msgEl.style.display = 'block';
+  }
+}
+
+// ─── Recovery Email ────────────────────────────────────────────────────────────
+
+async function loadMyEmail() {
+  try {
+    const res  = await fetch('/api/auth/check');
+    const data = await res.json();
+    if (data.authenticated && data.admin && data.admin.email) {
+      document.getElementById('my-email').value = data.admin.email;
+    }
+  } catch (_) {}
+}
+
+async function updateEmail() {
+  const email = document.getElementById('my-email').value.trim();
+  const msgEl = document.getElementById('email-msg');
+  if (!email) { msgEl.className='msg-error'; msgEl.textContent='Email address is required.'; msgEl.style.display='block'; return; }
+  try {
+    const res  = await fetch('/api/auth/update-email', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    msgEl.className  = data.success ? 'msg-success' : 'msg-error';
+    msgEl.textContent = data.message;
+    msgEl.style.display = 'block';
+    if (data.success) showToast('Recovery email saved!', 'success');
+  } catch (_) {
+    msgEl.className = 'msg-error'; msgEl.textContent = 'Error saving email.'; msgEl.style.display = 'block';
   }
 }
 

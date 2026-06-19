@@ -89,6 +89,11 @@ async function initDB() {
     );
   `);
 
+  // Add email + reset-token columns if they don't exist yet (safe on re-run)
+  await pool.query(`ALTER TABLE admins ADD COLUMN IF NOT EXISTS email TEXT`);
+  await pool.query(`ALTER TABLE admins ADD COLUMN IF NOT EXISTS reset_token TEXT`);
+  await pool.query(`ALTER TABLE admins ADD COLUMN IF NOT EXISTS reset_token_expires TIMESTAMP`);
+
   // Seed default admin
   const adminExists = await pool.query('SELECT id FROM admins WHERE username = $1', ['admin']);
   if (adminExists.rows.length === 0) {

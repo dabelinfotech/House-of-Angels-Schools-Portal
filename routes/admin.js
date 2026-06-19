@@ -716,13 +716,13 @@ router.post('/admins', requireAuth, async (req, res) => {
   if (req.session.adminRole !== 'superadmin') {
     return res.status(403).json({ success: false, message: 'Insufficient permissions.' });
   }
-  const { username, password, full_name, role } = req.body;
+  const { username, password, full_name, role, email } = req.body;
   if (!username || !password) return res.status(400).json({ success: false, message: 'Username and password required.' });
   try {
     const hash = bcrypt.hashSync(password, 10);
     await db.query(
-      'INSERT INTO admins (username, password_hash, full_name, role) VALUES ($1,$2,$3,$4)',
-      [username.trim().toLowerCase(), hash, full_name || username, role || 'admin']
+      'INSERT INTO admins (username, password_hash, full_name, role, email) VALUES ($1,$2,$3,$4,$5)',
+      [username.trim().toLowerCase(), hash, full_name || username, role || 'admin', email ? email.trim().toLowerCase() : null]
     );
     res.json({ success: true, message: 'Admin user created.' });
   } catch (e) {

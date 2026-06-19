@@ -509,6 +509,19 @@
       <!-- Security -->
       <div>
         <div class="card" style="margin-bottom:1.5rem">
+          <div class="card-header"><h3>Recovery Email</h3></div>
+          <p style="font-size:0.82rem;color:#6b7280;margin-bottom:0.8rem">Used to receive password reset links. Keep it up to date.</p>
+          <form id="email-form">
+            <div class="form-field-admin">
+              <label>Email Address</label>
+              <input type="email" id="my-email" class="admin-input" placeholder="your@email.com">
+            </div>
+            <div id="email-msg" style="display:none;padding:0.6rem;border-radius:6px;font-size:0.85rem;margin-top:0.5rem"></div>
+            <button type="button" class="btn-primary" onclick="updateEmail()" style="margin-top:0.75rem">Save Email</button>
+          </form>
+        </div>
+
+        <div class="card" style="margin-bottom:1.5rem">
           <div class="card-header"><h3>Change Password</h3></div>
           <form id="pwd-form">
             <div class="form-field-admin">
@@ -695,6 +708,10 @@
     <div class="form-field-admin">
       <label>Username *</label>
       <input type="text" id="new-admin-username" class="admin-input" placeholder="Username (lowercase)">
+    </div>
+    <div class="form-field-admin">
+      <label>Email Address</label>
+      <input type="email" id="new-admin-email" class="admin-input" placeholder="admin@example.com (for password recovery)">
     </div>
     <div class="form-field-admin">
       <label>Password *</label>

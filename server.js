@@ -44,6 +44,12 @@ app.get('/admin', (req, res) => {
 app.get('/admin/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin', 'dashboard.html'));
 });
+app.get('/admin/forgot-password', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin', 'forgot-password.html'));
+});
+app.get('/admin/reset-password', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin', 'reset-password.html'));
+});
 
 // Catch-all
 app.get('/{*path}', (req, res) => {
