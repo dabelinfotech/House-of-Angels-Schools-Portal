@@ -1,0 +1,1681 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard – Nursery &amp; Primary Result Portal</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/admin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="sb-logo">
+          <svg viewBox="0 0 36 36" fill="none" width="28" height="28">
+            <circle
+              cx="18"
+              cy="18"
+              r="17"
+              fill="#006400"
+              stroke="#FFD700"
+              stroke-width="1.5"
+            />
+            <path d="M18 6l6 8H12l6-8z" fill="#FFD700" />
+            <rect
+              x="12"
+              y="14"
+              width="12"
+              height="10"
+              fill="white"
+              opacity="0.9"
+              rx="1"
+            />
+            <path
+              d="M14 17h8M14 20h6"
+              stroke="#006400"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+        <div class="sb-title">
+          <span class="sb-name">Nursery &amp; Primary</span>
+          <span class="sb-sub">Admin Panel</span>
+        </div>
+        <button
+          class="sidebar-close no-print"
+          id="sidebar-close"
+          onclick="toggleSidebar()"
+        >
+          ✕
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a
+          class="nav-item active"
+          data-section="overview"
+          onclick="showSection('overview')"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <rect
+              x="3"
+              y="3"
+              width="7"
+              height="7"
+              stroke="currentColor"
+              stroke-width="2"
+              rx="1"
+            />
+            <rect
+              x="14"
+              y="3"
+              width="7"
+              height="7"
+              stroke="currentColor"
+              stroke-width="2"
+              rx="1"
+            />
+            <rect
+              x="3"
+              y="14"
+              width="7"
+              height="7"
+              stroke="currentColor"
+              stroke-width="2"
+              rx="1"
+            />
+            <rect
+              x="14"
+              y="14"
+              width="7"
+              height="7"
+              stroke="currentColor"
+              stroke-width="2"
+              rx="1"
+            />
+          </svg>
+          Overview
+        </a>
+        <a
+          class="nav-item"
+          data-section="students"
+          onclick="showSection('students')"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <circle
+              cx="9"
+              cy="7"
+              r="4"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <path
+              d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+          </svg>
+          Students
+        </a>
+        <a
+          class="nav-item"
+          data-section="results"
+          onclick="showSection('results')"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <polyline
+              points="14 2 14 8 20 8"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <line
+              x1="16"
+              y1="13"
+              x2="8"
+              y2="13"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <line
+              x1="16"
+              y1="17"
+              x2="8"
+              y2="17"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <polyline
+              points="10 9 9 9 8 9"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+          </svg>
+          Results
+        </a>
+        <a
+          class="nav-item"
+          data-section="upload"
+          onclick="showSection('upload')"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <polyline
+              points="16 16 12 12 8 16"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <line
+              x1="12"
+              y1="12"
+              x2="12"
+              y2="21"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <path
+              d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+          </svg>
+          Bulk Upload
+        </a>
+        <a class="nav-item" data-section="pins" onclick="showSection('pins')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <rect
+              x="3"
+              y="11"
+              width="18"
+              height="11"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <path
+              d="M7 11V7a5 5 0 0110 0v4"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <circle cx="12" cy="16" r="1" fill="currentColor" />
+          </svg>
+          PIN Manager
+        </a>
+        <a
+          class="nav-item"
+          data-section="tabulation"
+          onclick="showSection('tabulation')"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <rect
+              x="3"
+              y="3"
+              width="18"
+              height="18"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <path
+              d="M3 8h18M3 13h18M8 3v18"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+          </svg>
+          Tabulation
+        </a>
+        <a
+          class="nav-item"
+          data-section="analysis"
+          onclick="showSection('analysis')"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <polyline
+              points="22 12 18 12 15 21 9 3 6 12 2 12"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Analysis
+        </a>
+        <a
+          class="nav-item"
+          data-section="classview"
+          onclick="showSection('classview')"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M3 3h18v18H3z" stroke="none" />
+            <rect
+              x="3"
+              y="3"
+              width="18"
+              height="18"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <path d="M3 9h18M9 21V9" stroke="currentColor" stroke-width="2" />
+          </svg>
+          Class Viewer
+        </a>
+        <a
+          class="nav-item"
+          data-section="settings"
+          onclick="showSection('settings')"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <circle
+              cx="12"
+              cy="12"
+              r="3"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <path
+              d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+          </svg>
+          Settings
+        </a>
+      </nav>
+
+      <div class="sidebar-user">
+        <div class="user-avatar" id="user-initial">A</div>
+        <div class="user-info">
+          <span class="user-name" id="admin-name">Admin</span>
+          <span class="user-role" id="admin-role">Administrator</span>
+        </div>
+        <button class="logout-btn" onclick="logout()" title="Logout">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="sidebar-powered">Powered by <strong>dabeltech</strong></div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-wrapper" id="main-wrapper">
+      <!-- Top Nav -->
+      <header class="topbar">
+        <button class="hamburger" onclick="toggleSidebar()">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="topbar-title" id="page-title">Overview</div>
+        <div class="topbar-right">
+          <span class="topbar-badge" id="topbar-session"
+            >2024/2025 · First Term</span
+          >
+        </div>
+      </header>
+
+      <!-- ═══════ OVERVIEW ═══════ -->
+      <section class="content-section active" id="section-overview">
+        <div class="page-header">
+          <h2>Dashboard Overview</h2>
+          <p>Welcome back, <strong id="overview-admin-name">Admin</strong></p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card green">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+                <circle
+                  cx="9"
+                  cy="7"
+                  r="4"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+                <path
+                  d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-num" id="stat-students">0</div>
+              <div class="stat-label">Total Students</div>
+            </div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+                <polyline
+                  points="14 2 14 8 20 8"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-num" id="stat-results">0</div>
+              <div class="stat-label">Result Records</div>
+            </div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect
+                  x="3"
+                  y="11"
+                  width="18"
+                  height="11"
+                  rx="2"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+                <path
+                  d="M7 11V7a5 5 0 0110 0v4"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-num" id="stat-pins">0</div>
+              <div class="stat-label">PINs Generated</div>
+            </div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M22 11.08V12a10 10 0 11-5.93-9.14"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+                <polyline
+                  points="22 4 12 14.01 9 11.01"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-num" id="stat-used-pins">0</div>
+              <div class="stat-label">PINs Used</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="two-col-grid">
+          <div class="card">
+            <div class="card-header"><h3>Recent Results</h3></div>
+            <div class="table-wrap">
+              <table class="data-table" id="recent-results-table">
+                <thead>
+                  <tr>
+                    <th>Student</th>
+                    <th>Subject</th>
+                    <th>Total</th>
+                    <th>Grade</th>
+                    <th>Session/Term</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-results-body">
+                  <tr>
+                    <td colspan="5" class="empty-row">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Classes</h3></div>
+            <div class="class-badges" id="class-badges">
+              <div class="empty-row">Loading...</div>
+            </div>
+            <div class="card-header" style="margin-top: 1rem">
+              <h3>Quick Actions</h3>
+            </div>
+            <div class="quick-actions">
+              <button class="qa-btn" onclick="showSection('upload')">
+                📤 Upload Results
+              </button>
+              <button class="qa-btn" onclick="showSection('students')">
+                ➕ Add Student
+              </button>
+              <button class="qa-btn" onclick="showSection('pins')">
+                🔑 Generate PINs
+              </button>
+              <button class="qa-btn" onclick="showSection('classview')">
+                📊 View Class Results
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════ STUDENTS ═══════ -->
+      <section class="content-section" id="section-students">
+        <div class="page-header">
+          <h2>Student Management</h2>
+          <button class="btn-primary" onclick="openAddStudentModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <line
+                x1="12"
+                y1="5"
+                x2="12"
+                y2="19"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <line
+                x1="5"
+                y1="12"
+                x2="19"
+                y2="12"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+            </svg>
+            Add Student
+          </button>
+        </div>
+
+        <div class="filter-bar">
+          <input
+            type="text"
+            id="student-search"
+            placeholder="Search by name or admission no..."
+            class="search-input"
+            oninput="loadStudents()"
+          />
+          <select
+            id="student-class-filter"
+            class="filter-select"
+            onchange="loadStudents()"
+          >
+            <option value="">All Classes</option>
+          </select>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table class="data-table" id="students-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Admission No</th>
+                  <th>Class</th>
+                  <th>Gender</th>
+                  <th>Date of Birth</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="students-body">
+                <tr>
+                  <td colspan="7" class="empty-row">Loading students...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════ RESULTS ═══════ -->
+      <section class="content-section" id="section-results">
+        <div class="page-header">
+          <h2>Individual Results</h2>
+          <button class="btn-primary" onclick="openAddResultModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <line
+                x1="12"
+                y1="5"
+                x2="12"
+                y2="19"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <line
+                x1="5"
+                y1="12"
+                x2="19"
+                y2="12"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+            </svg>
+            Add Result
+          </button>
+        </div>
+
+        <div class="filter-bar">
+          <input
+            type="text"
+            id="result-student-search"
+            placeholder="Search student by name or admission no..."
+            class="search-input"
+            style="flex: 2"
+          />
+          <select id="result-session-filter" class="filter-select">
+            <option value="">-- Session --</option>
+          </select>
+          <select id="result-term-filter" class="filter-select">
+            <option value="">-- Term --</option>
+            <option value="First Term">First Term</option>
+            <option value="Second Term">Second Term</option>
+            <option value="Third Term">Third Term</option>
+          </select>
+          <button class="btn-secondary" onclick="searchStudentResults()">
+            Search
+          </button>
+        </div>
+
+        <div class="card" id="results-panel">
+          <div class="empty-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                stroke="#94a3b8"
+                stroke-width="1.5"
+              />
+            </svg>
+            <p>Search for a student to view or edit their results</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════ BULK UPLOAD ═══════ -->
+      <section class="content-section" id="section-upload">
+        <div class="page-header">
+          <h2>Bulk Result Upload</h2>
+        </div>
+
+        <div class="two-col-grid">
+          <div class="card">
+            <div class="card-header"><h3>Upload Excel File</h3></div>
+            <div class="upload-zone" id="upload-zone">
+              <div class="upload-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                  <polyline
+                    points="16 16 12 12 8 16"
+                    stroke="#006400"
+                    stroke-width="2"
+                  />
+                  <line
+                    x1="12"
+                    y1="12"
+                    x2="12"
+                    y2="21"
+                    stroke="#006400"
+                    stroke-width="2"
+                  />
+                  <path
+                    d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"
+                    stroke="#006400"
+                    stroke-width="2"
+                  />
+                </svg>
+              </div>
+              <p>Drag & drop your Excel file here</p>
+              <p class="upload-sub">or click to browse</p>
+              <input
+                type="file"
+                id="upload-file-input"
+                accept=".xlsx,.xls,.csv"
+                style="display: none"
+              />
+              <button
+                class="btn-secondary"
+                onclick="document.getElementById('upload-file-input').click()"
+              >
+                Choose File
+              </button>
+              <div
+                id="selected-file-name"
+                style="margin-top: 0.75rem; color: #64748b; font-size: 0.85rem"
+              ></div>
+            </div>
+
+            <div
+              class="progress-bar-wrap"
+              id="upload-progress"
+              style="display: none"
+            >
+              <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+              </div>
+              <span id="progress-text">Uploading...</span>
+            </div>
+
+            <button
+              class="btn-primary upload-btn"
+              id="upload-btn"
+              onclick="doUpload()"
+              disabled
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <polyline
+                  points="16 16 12 12 8 16"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+                <line
+                  x1="12"
+                  y1="12"
+                  x2="12"
+                  y2="21"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+              </svg>
+              Upload & Process
+            </button>
+
+            <div
+              id="upload-result"
+              style="display: none; margin-top: 1rem"
+            ></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3>Excel Format Guide</h3></div>
+            <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 1rem">
+              Your Excel file must have these column headers (row 1):
+            </p>
+
+            <div class="format-table-wrap">
+              <table class="format-table">
+                <thead>
+                  <tr>
+                    <th>Column</th>
+                    <th>Example</th>
+                    <th>Required</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Student Name</td>
+                    <td>John Adeyemi</td>
+                    <td><span class="badge-req">Yes</span></td>
+                  </tr>
+                  <tr>
+                    <td>Admission No</td>
+                    <td>SS/2024/001</td>
+                    <td><span class="badge-req">Yes</span></td>
+                  </tr>
+                  <tr>
+                    <td>Class</td>
+                    <td>SS2A</td>
+                    <td><span class="badge-opt">Optional</span></td>
+                  </tr>
+                  <tr>
+                    <td>Session</td>
+                    <td>2024/2025</td>
+                    <td><span class="badge-req">Yes</span></td>
+                  </tr>
+                  <tr>
+                    <td>Term</td>
+                    <td>First Term</td>
+                    <td><span class="badge-req">Yes</span></td>
+                  </tr>
+                  <tr>
+                    <td>Subject</td>
+                    <td>Mathematics</td>
+                    <td><span class="badge-req">Yes</span></td>
+                  </tr>
+                  <tr>
+                    <td>CA1</td>
+                    <td>18</td>
+                    <td><span class="badge-opt">Optional</span></td>
+                  </tr>
+                  <tr>
+                    <td>CA2</td>
+                    <td>17</td>
+                    <td><span class="badge-opt">Optional</span></td>
+                  </tr>
+                  <tr>
+                    <td>Exam</td>
+                    <td>55</td>
+                    <td><span class="badge-req">Yes</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="format-notes">
+              <p>
+                📌 <strong>CA1 max:</strong> 20 | <strong>CA2 max:</strong> 20 |
+                <strong>Exam max:</strong> 60
+              </p>
+              <p>📌 One row per student per subject</p>
+              <p>📌 Existing records will be updated (not duplicated)</p>
+              <p>📌 New students are auto-created if not found</p>
+            </div>
+
+            <a
+              href="#"
+              id="download-template"
+              class="btn-secondary"
+              style="
+                display: inline-block;
+                text-align: center;
+                margin-top: 1rem;
+                text-decoration: none;
+              "
+              onclick="downloadTemplate()"
+            >
+              ⬇ Download Sample Template
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════ PINS ═══════ -->
+      <section class="content-section" id="section-pins">
+        <div class="page-header">
+          <h2>PIN Manager</h2>
+        </div>
+
+        <div class="card" style="margin-bottom: 1.5rem">
+          <div class="card-header"><h3>Generate PINs</h3></div>
+          <div class="filter-bar" style="flex-wrap: wrap">
+            <div class="field-group">
+              <label>Session</label>
+              <input
+                type="text"
+                id="gen-session"
+                placeholder="e.g. 2024/2025"
+                class="filter-input"
+              />
+            </div>
+            <div class="field-group">
+              <label>Term</label>
+              <select id="gen-term" class="filter-select">
+                <option value="First Term">First Term</option>
+                <option value="Second Term">Second Term</option>
+                <option value="Third Term">Third Term</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label>Class</label>
+              <select id="gen-class" class="filter-select">
+                <option value="">-- Select Class --</option>
+              </select>
+            </div>
+            <button class="btn-primary" onclick="generatePins()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+              </svg>
+              Generate PINs
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>View / Print PINs</h3>
+            <div style="display: flex; gap: 0.5rem">
+              <button class="btn-secondary btn-sm" onclick="printPins()">
+                🖨️ Print
+              </button>
+              <button class="btn-secondary btn-sm" onclick="exportPinsCsv()">
+                ⬇ Export CSV
+              </button>
+            </div>
+          </div>
+          <div class="filter-bar">
+            <select
+              id="view-pin-session"
+              class="filter-select"
+              onchange="loadPins()"
+            >
+              <option value="">-- All Sessions --</option>
+            </select>
+            <select
+              id="view-pin-term"
+              class="filter-select"
+              onchange="loadPins()"
+            >
+              <option value="">-- All Terms --</option>
+              <option value="First Term">First Term</option>
+              <option value="Second Term">Second Term</option>
+              <option value="Third Term">Third Term</option>
+            </select>
+            <select
+              id="view-pin-class"
+              class="filter-select"
+              onchange="loadPins()"
+            >
+              <option value="">-- All Classes --</option>
+            </select>
+          </div>
+          <div class="table-wrap" id="pins-print-area">
+            <table class="data-table" id="pins-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Student Name</th>
+                  <th>Admission No</th>
+                  <th>Class</th>
+                  <th>PIN</th>
+                  <th>Session</th>
+                  <th>Term</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="pins-body">
+                <tr>
+                  <td colspan="9" class="empty-row">
+                    Select filters to load PINs
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════ TABULATION ═══════ -->
+      <section class="content-section" id="section-tabulation">
+        <div class="page-header">
+          <h2>Tabulation Sheet</h2>
+          <div
+            id="tab-action-btns"
+            style="display: none; gap: 0.5rem; flex-direction: row"
+          >
+            <button
+              class="btn-secondary"
+              onclick="exportTabulationCsv()"
+              id="tab-export-btn"
+              style="display: none"
+            >
+              ⬇ Export CSV
+            </button>
+            <button
+              class="btn-secondary"
+              onclick="printTabulation()"
+              id="tab-print-btn"
+              style="display: none"
+            >
+              🖨️ Print
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <select id="tab-class" class="filter-select">
+            <option value="">-- Select Class --</option>
+          </select>
+          <select id="tab-session" class="filter-select">
+            <option value="">-- Session --</option>
+          </select>
+          <select id="tab-term" class="filter-select">
+            <option value="">-- Term --</option>
+            <option value="First Term">First Term</option>
+            <option value="Second Term">Second Term</option>
+            <option value="Third Term">Third Term</option>
+          </select>
+          <button class="btn-primary" onclick="loadTabulation()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <rect
+                x="3"
+                y="3"
+                width="18"
+                height="18"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path d="M3 8h18M8 3v18" stroke="currentColor" stroke-width="2" />
+            </svg>
+            Generate
+          </button>
+        </div>
+
+        <div id="tabulation-panel">
+          <div class="empty-placeholder">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none">
+              <rect
+                x="3"
+                y="3"
+                width="18"
+                height="18"
+                rx="2"
+                stroke="#94a3b8"
+                stroke-width="1.5"
+              />
+              <path
+                d="M3 8h18M3 13h18M8 3v18"
+                stroke="#94a3b8"
+                stroke-width="1.5"
+              />
+            </svg>
+            <p>
+              Select a class, session, and term to generate the tabulation sheet
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════ ANALYSIS ═══════ -->
+      <section class="content-section" id="section-analysis">
+        <div class="page-header">
+          <h2>Performance Analysis</h2>
+          <button
+            class="btn-secondary"
+            onclick="exportAnalysisCsv()"
+            id="analysis-export-btn"
+            style="display: none"
+          >
+            ⬇ Export CSV
+          </button>
+        </div>
+
+        <div class="filter-bar">
+          <select id="an-class" class="filter-select">
+            <option value="">-- Select Class --</option>
+          </select>
+          <select id="an-session" class="filter-select">
+            <option value="">-- Session --</option>
+          </select>
+          <select id="an-term" class="filter-select">
+            <option value="">-- Term --</option>
+            <option value="First Term">First Term</option>
+            <option value="Second Term">Second Term</option>
+            <option value="Third Term">Third Term</option>
+          </select>
+          <button class="btn-primary" onclick="loadAnalysis()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <polyline
+                points="22 12 18 12 15 21 9 3 6 12 2 12"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+            Analyse
+          </button>
+        </div>
+
+        <div id="analysis-panel">
+          <div class="empty-placeholder">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none">
+              <polyline
+                points="22 12 18 12 15 21 9 3 6 12 2 12"
+                stroke="#94a3b8"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <p>Select a class, session, and term, then click Analyse</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════ CLASS VIEWER ═══════ -->
+      <section class="content-section" id="section-classview">
+        <div class="page-header">
+          <h2>Class Result Viewer</h2>
+          <button
+            class="btn-secondary"
+            onclick="printClassResults()"
+            id="print-class-btn"
+            style="display: none"
+          >
+            🖨️ Print
+          </button>
+        </div>
+
+        <div class="filter-bar">
+          <select id="cv-class" class="filter-select">
+            <option value="">-- Select Class --</option>
+          </select>
+          <select id="cv-session" class="filter-select">
+            <option value="">-- Session --</option>
+          </select>
+          <select id="cv-term" class="filter-select">
+            <option value="">-- Term --</option>
+            <option value="First Term">First Term</option>
+            <option value="Second Term">Second Term</option>
+            <option value="Third Term">Third Term</option>
+          </select>
+          <button class="btn-primary" onclick="loadClassResults()">
+            Load Results
+          </button>
+        </div>
+
+        <div id="class-results-panel">
+          <div class="empty-placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+              <rect
+                x="3"
+                y="3"
+                width="18"
+                height="18"
+                rx="2"
+                stroke="#94a3b8"
+                stroke-width="1.5"
+              />
+              <path d="M3 9h18M9 21V9" stroke="#94a3b8" stroke-width="1.5" />
+            </svg>
+            <p>Select a class, session, and term to view results</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════ SETTINGS ═══════ -->
+      <section class="content-section" id="section-settings">
+        <div class="page-header"><h2>Settings</h2></div>
+
+        <div class="two-col-grid">
+          <!-- School Info -->
+          <div class="card">
+            <div class="card-header"><h3>School Information</h3></div>
+            <form id="settings-form">
+              <div class="form-field-admin">
+                <label>School Name</label>
+                <input
+                  type="text"
+                  name="school_name"
+                  class="admin-input"
+                  placeholder="Full school name"
+                />
+              </div>
+              <div class="form-field-admin">
+                <label>School Motto</label>
+                <input
+                  type="text"
+                  name="school_motto"
+                  class="admin-input"
+                  placeholder="School motto"
+                />
+              </div>
+              <div class="form-field-admin">
+                <label>School Address</label>
+                <input
+                  type="text"
+                  name="school_address"
+                  class="admin-input"
+                  placeholder="Full address"
+                />
+              </div>
+              <div class="form-field-admin">
+                <label>Phone Number</label>
+                <input
+                  type="text"
+                  name="school_phone"
+                  class="admin-input"
+                  placeholder="+234 xxx xxx xxxx"
+                />
+              </div>
+              <div class="form-field-admin">
+                <label>Email Address</label>
+                <input
+                  type="email"
+                  name="school_email"
+                  class="admin-input"
+                  placeholder="school@example.com"
+                />
+              </div>
+              <div class="form-field-admin">
+                <label>Principal's Name</label>
+                <input
+                  type="text"
+                  name="principal_name"
+                  class="admin-input"
+                  placeholder="Mr/Mrs. Full Name"
+                />
+              </div>
+              <div class="form-field-admin">
+                <label>Vice Principal's Name</label>
+                <input
+                  type="text"
+                  name="vice_principal"
+                  class="admin-input"
+                  placeholder="Mr/Mrs. Full Name"
+                />
+              </div>
+              <div class="form-field-admin">
+                <label>Current Session</label>
+                <input
+                  type="text"
+                  name="current_session"
+                  class="admin-input"
+                  placeholder="2024/2025"
+                />
+              </div>
+              <div class="form-field-admin">
+                <label>Current Term</label>
+                <select name="current_term" class="admin-input">
+                  <option value="First Term">First Term</option>
+                  <option value="Second Term">Second Term</option>
+                  <option value="Third Term">Third Term</option>
+                </select>
+              </div>
+              <div
+                id="settings-msg"
+                style="
+                  display: none;
+                  padding: 0.6rem;
+                  border-radius: 6px;
+                  font-size: 0.85rem;
+                  margin-top: 0.5rem;
+                "
+              ></div>
+              <button
+                type="button"
+                class="btn-primary"
+                onclick="saveSettings()"
+                style="margin-top: 0.75rem"
+              >
+                Save Settings
+              </button>
+            </form>
+          </div>
+
+          <!-- Security -->
+          <div>
+            <div class="card" style="margin-bottom: 1.5rem">
+              <div class="card-header"><h3>Change Password</h3></div>
+              <form id="pwd-form">
+                <div class="form-field-admin">
+                  <label>Current Password</label>
+                  <input
+                    type="password"
+                    id="curr-pwd"
+                    class="admin-input"
+                    placeholder="Current password"
+                  />
+                </div>
+                <div class="form-field-admin">
+                  <label>New Password</label>
+                  <input
+                    type="password"
+                    id="new-pwd"
+                    class="admin-input"
+                    placeholder="New password (min 6 chars)"
+                  />
+                </div>
+                <div class="form-field-admin">
+                  <label>Confirm Password</label>
+                  <input
+                    type="password"
+                    id="confirm-pwd"
+                    class="admin-input"
+                    placeholder="Confirm new password"
+                  />
+                </div>
+                <div
+                  id="pwd-msg"
+                  style="
+                    display: none;
+                    padding: 0.6rem;
+                    border-radius: 6px;
+                    font-size: 0.85rem;
+                    margin-top: 0.5rem;
+                  "
+                ></div>
+                <button
+                  type="button"
+                  class="btn-primary"
+                  onclick="changePassword()"
+                  style="margin-top: 0.75rem"
+                >
+                  Update Password
+                </button>
+              </form>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3>Admin Users</h3></div>
+              <div id="admins-list" style="margin-bottom: 1rem"></div>
+              <button class="btn-secondary" onclick="openAddAdminModal()">
+                + Add Admin User
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ════════════════════════════ MODALS ════════════════════════════ -->
+
+    <!-- Add Student Modal -->
+    <div class="modal-overlay" id="modal-add-student">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Add New Student</h3>
+          <button class="modal-close" onclick="closeModal('modal-add-student')">
+            ✕
+          </button>
+        </div>
+        <form id="add-student-form">
+          <div class="form-field-admin">
+            <label>Full Name *</label>
+            <input
+              type="text"
+              name="name"
+              class="admin-input"
+              placeholder="e.g. Adeyemi Johnson Ola"
+              required
+            />
+          </div>
+          <div class="form-field-admin">
+            <label>Admission Number *</label>
+            <input
+              type="text"
+              name="admission_number"
+              class="admin-input"
+              placeholder="e.g. SS/2024/001"
+              required
+            />
+          </div>
+          <div class="form-field-admin">
+            <label>Class *</label>
+            <select
+              name="class"
+              id="add-student-class"
+              class="admin-input"
+              required
+            >
+              <option value="">-- Select Class --</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-field-admin">
+              <label>Gender</label>
+              <select name="gender" class="admin-input">
+                <option value="">-- Select --</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            <div class="form-field-admin">
+              <label>Date of Birth</label>
+              <input type="date" name="date_of_birth" class="admin-input" />
+            </div>
+          </div>
+          <div
+            id="add-student-msg"
+            style="
+              display: none;
+              padding: 0.6rem;
+              border-radius: 6px;
+              font-size: 0.85rem;
+            "
+          ></div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn-secondary"
+              onclick="closeModal('modal-add-student')"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn-primary"
+              onclick="submitAddStudent()"
+            >
+              Add Student
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Add Result Modal -->
+    <div class="modal-overlay" id="modal-add-result">
+      <div class="modal modal-lg">
+        <div class="modal-header">
+          <h3>Add / Edit Result</h3>
+          <button class="modal-close" onclick="closeModal('modal-add-result')">
+            ✕
+          </button>
+        </div>
+        <div class="form-field-admin">
+          <label>Student (search by name or admission no.)</label>
+          <input
+            type="text"
+            id="result-student-input"
+            class="admin-input"
+            placeholder="Type to search..."
+            oninput="searchStudentForResult(this.value)"
+          />
+          <div
+            id="student-search-dropdown"
+            class="search-dropdown"
+            style="display: none"
+          ></div>
+          <input type="hidden" id="result-student-id" />
+        </div>
+        <div class="form-row">
+          <div class="form-field-admin">
+            <label>Session *</label>
+            <input
+              type="text"
+              id="result-session"
+              class="admin-input"
+              placeholder="e.g. 2024/2025"
+            />
+          </div>
+          <div class="form-field-admin">
+            <label>Term *</label>
+            <select id="result-term" class="admin-input">
+              <option value="First Term">First Term</option>
+              <option value="Second Term">Second Term</option>
+              <option value="Third Term">Third Term</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-field-admin">
+          <label
+            >Subject *
+            <span
+              id="result-subject-hint"
+              style="font-size: 0.75rem; color: #94a3b8; font-weight: 400"
+            ></span
+          ></label>
+          <select id="result-subject" class="admin-input">
+            <option value="">-- Select a student first --</option>
+          </select>
+        </div>
+        <div class="form-row three-col">
+          <div class="form-field-admin">
+            <label>CA1 (max 20)</label>
+            <input
+              type="number"
+              id="result-ca1"
+              class="admin-input"
+              min="0"
+              max="20"
+              placeholder="0"
+            />
+          </div>
+          <div class="form-field-admin">
+            <label>CA2 (max 20)</label>
+            <input
+              type="number"
+              id="result-ca2"
+              class="admin-input"
+              min="0"
+              max="20"
+              placeholder="0"
+            />
+          </div>
+          <div class="form-field-admin">
+            <label>Exam (max 60)</label>
+            <input
+              type="number"
+              id="result-exam"
+              class="admin-input"
+              min="0"
+              max="60"
+              placeholder="0"
+            />
+          </div>
+        </div>
+        <div class="score-preview" id="score-preview"></div>
+        <div
+          id="add-result-msg"
+          style="
+            display: none;
+            padding: 0.6rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+          "
+        ></div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-secondary"
+            onclick="closeModal('modal-add-result')"
+          >
+            Cancel
+          </button>
+          <button type="button" class="btn-primary" onclick="submitAddResult()">
+            Save Result
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Student Modal -->
+    <div class="modal-overlay" id="modal-edit-student">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Edit Student</h3>
+          <button
+            class="modal-close"
+            onclick="closeModal('modal-edit-student')"
+          >
+            ✕
+          </button>
+        </div>
+        <input type="hidden" id="edit-student-id" />
+        <div class="form-field-admin">
+          <label>Full Name *</label>
+          <input
+            type="text"
+            id="edit-student-name"
+            class="admin-input"
+            placeholder="Full name"
+          />
+        </div>
+        <div class="form-field-admin">
+          <label>Class *</label>
+          <select id="edit-student-class" class="admin-input">
+            <option value="">-- Select Class --</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-field-admin">
+            <label>Gender</label>
+            <select id="edit-student-gender" class="admin-input">
+              <option value="">-- Select --</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+          <div class="form-field-admin">
+            <label>Date of Birth</label>
+            <input type="date" id="edit-student-dob" class="admin-input" />
+          </div>
+        </div>
+        <div
+          id="edit-student-msg"
+          style="
+            display: none;
+            padding: 0.6rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+          "
+        ></div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-secondary"
+            onclick="closeModal('modal-edit-student')"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn-primary"
+            onclick="submitEditStudent()"
+          >
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Admin Modal -->
+    <div class="modal-overlay" id="modal-add-admin">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Add Admin User</h3>
+          <button class="modal-close" onclick="closeModal('modal-add-admin')">
+            ✕
+          </button>
+        </div>
+        <div class="form-field-admin">
+          <label>Full Name</label>
+          <input
+            type="text"
+            id="new-admin-name"
+            class="admin-input"
+            placeholder="Full name"
+          />
+        </div>
+        <div class="form-field-admin">
+          <label>Username *</label>
+          <input
+            type="text"
+            id="new-admin-username"
+            class="admin-input"
+            placeholder="Username (lowercase)"
+          />
+        </div>
+        <div class="form-field-admin">
+          <label>Password *</label>
+          <input
+            type="password"
+            id="new-admin-password"
+            class="admin-input"
+            placeholder="Minimum 6 characters"
+          />
+        </div>
+        <div class="form-field-admin">
+          <label>Role</label>
+          <select
+            id="new-admin-role"
+            class="admin-input"
+            onchange="toggleStaffSubjects(this.value)"
+          >
+            <option value="admin">Admin (Full Access)</option>
+            <option value="staff">Staff (Subject-Limited)</option>
+            <option value="superadmin">Super Admin</option>
+          </select>
+        </div>
+        <div id="staff-subject-assign" style="display: none">
+          <label
+            style="
+              font-size: 0.82rem;
+              font-weight: 600;
+              color: #374151;
+              display: block;
+              margin-bottom: 0.4rem;
+            "
+            >Assigned Subjects</label
+          >
+          <div id="staff-subject-checkboxes" class="staff-subject-grid"></div>
+        </div>
+        <div
+          id="add-admin-msg"
+          style="
+            display: none;
+            padding: 0.6rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+          "
+        ></div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-secondary"
+            onclick="closeModal('modal-add-admin')"
+          >
+            Cancel
+          </button>
+          <button type="button" class="btn-primary" onclick="submitAddAdmin()">
+            Create Staff / Admin
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Staff Assignments Modal -->
+    <div class="modal-overlay" id="modal-edit-assignments">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Edit Subject Assignments</h3>
+          <button
+            class="modal-close"
+            onclick="closeModal('modal-edit-assignments')"
+          >
+            ✕
+          </button>
+        </div>
+        <p
+          id="edit-assign-name"
+          style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.8rem"
+        ></p>
+        <div id="edit-subject-checkboxes" class="staff-subject-grid"></div>
+        <div
+          id="edit-assign-msg"
+          style="
+            display: none;
+            padding: 0.6rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-top: 0.6rem;
+          "
+        ></div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-secondary"
+            onclick="closeModal('modal-edit-assignments')"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn-primary"
+            id="save-assign-btn"
+            onclick="saveStaffAssignments()"
+          >
+            Save Assignments
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/assets/js/admin.js"></script>
+  </body>
+</html>

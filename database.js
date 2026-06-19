@@ -155,15 +155,15 @@ if (!adminExists) {
 
 // Seed default school settings
 const defaults = [
-  ['school_name', 'EXCELLENCE NURSERY & PRIMARY SCHOOL'],
-  ['school_motto', 'Knowledge, Integrity, Excellence'],
-  ['school_address', '123 Education Avenue, Lagos State, Nigeria'],
-  ['school_phone', '+234 800 000 0000'],
-  ['school_email', 'info@excellenceschool.edu.ng'],
+  ['school_name', 'HOUSE OF ANGEL SCHOOLS'],
+  ['school_motto', 'Excelling for Greatness'],
+  ['school_address', ''],
+  ['school_phone', ''],
+  ['school_email', ''],
   ['current_session', '2024/2025'],
   ['current_term', 'First Term'],
-  ['principal_name', 'Mr. John Adeyemi'],
-  ['vice_principal', 'Mrs. Grace Okonkwo'],
+  ['principal_name', ''],
+  ['vice_principal', ''],
   ['school_type', 'Nursery & Primary School'],
 ];
 

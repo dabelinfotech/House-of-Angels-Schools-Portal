@@ -1,0 +1,296 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Result Portal â€“ Nursery &amp; Primary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="stylesheet" href="/assets/css/print.css" media="print" />
+  </head>
+  <body>
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• CHECKER PAGE â•â•â• -->
+    <section id="checker-section">
+      <div class="checker-bg-overlay"></div>
+
+      <div class="checker-container">
+        <!-- School Branding -->
+        <div class="checker-brand">
+          <div class="brand-logo">
+            <svg
+              viewBox="0 0 60 60"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="30"
+                cy="30"
+                r="28"
+                fill="#006400"
+                stroke="#FFD700"
+                stroke-width="3"
+              />
+              <path d="M30 10 L38 22 L30 20 L22 22 Z" fill="#FFD700" />
+              <rect
+                x="22"
+                y="22"
+                width="16"
+                height="18"
+                fill="white"
+                opacity="0.9"
+              />
+              <rect x="25" y="25" width="10" height="2" fill="#006400" />
+              <rect x="25" y="29" width="10" height="2" fill="#006400" />
+              <rect x="25" y="33" width="7" height="2" fill="#006400" />
+              <path d="M18 44 L30 38 L42 44" fill="#FFD700" />
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h1 id="brand-school-name">
+              HOUSE OF ANGEL SCHOOLS
+            </h1>
+            <p id="brand-school-motto">Knowledge, Integrity, Excellence</p>
+          </div>
+        </div>
+
+        <!-- Checker Card -->
+        <div class="checker-card">
+          <div class="checker-card-top">
+            <div class="card-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                <rect
+                  x="3"
+                  y="3"
+                  width="18"
+                  height="18"
+                  rx="2"
+                  stroke="#006400"
+                  stroke-width="2"
+                />
+                <path
+                  d="M9 9h6M9 12h6M9 15h4"
+                  stroke="#006400"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <div>
+              <h2>Check Your Result</h2>
+              <p>Enter your credentials to view and print your result slip</p>
+            </div>
+          </div>
+
+          <form id="checker-form">
+            <div class="form-field">
+              <label for="admission_number">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  />
+                  <circle
+                    cx="12"
+                    cy="7"
+                    r="4"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  />
+                </svg>
+                Admission Number
+              </label>
+              <input
+                type="text"
+                id="admission_number"
+                placeholder="e.g. SS/2024/001"
+                required
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="pin">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <rect
+                    x="3"
+                    y="11"
+                    width="18"
+                    height="11"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  />
+                  <path
+                    d="M7 11V7a5 5 0 0110 0v4"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  />
+                </svg>
+                Result PIN
+              </label>
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  id="pin"
+                  placeholder="Enter your 8-character PIN"
+                  required
+                  maxlength="8"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <button
+                  type="button"
+                  class="pin-toggle"
+                  id="pin-visibility"
+                  title="Show/hide PIN"
+                >
+                  <svg
+                    id="eye-icon"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    />
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="3"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <span class="field-hint"
+                >PIN is provided by your school. Keep it confidential.</span
+              >
+            </div>
+
+            <button type="submit" class="btn-check" id="check-btn">
+              <span class="btn-text">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                Check Result
+              </span>
+              <span class="btn-loader" style="display: none">
+                <span class="spinner"></span> Checking...
+              </span>
+            </button>
+          </form>
+
+          <div id="error-message" class="error-toast" style="display: none">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M12 8v4M12 16h.01"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+            <span id="error-text"></span>
+          </div>
+        </div>
+
+        <!-- Notice / Footer -->
+        <div class="checker-notice">
+          <p>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+            </svg>
+            Your result data is secured and confidential.
+            <a href="/admin" class="admin-portal-link">Admin Portal â†’</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• RESULT PAGE â•â•â•â•â•â•â• -->
+    <section id="result-section" style="display: none">
+      <!-- Action bar (no-print) -->
+      <div class="result-action-bar no-print">
+        <div class="action-bar-inner">
+          <button onclick="location.reload()" class="btn-back-action">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M19 12H5M12 19l-7-7 7-7"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+            New Check
+          </button>
+          <div class="action-bar-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+            </svg>
+            Result Slip
+          </div>
+          <button onclick="window.print()" class="btn-print-action">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <polyline
+                points="6 9 6 2 18 2 18 9"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <rect
+                x="6"
+                y="14"
+                width="12"
+                height="8"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+            </svg>
+            Print Result
+          </button>
+        </div>
+      </div>
+
+      <!-- Result Slip -->
+      <div class="result-slip-container" id="result-slip-container">
+        <!-- Populated by checker.js -->
+      </div>
+    </section>
+
+    <script src="/assets/js/checker.js"></script>
+    <footer class="site-footer">Powered by <strong>dabeltech</strong></footer>
+  </body>
+</html>

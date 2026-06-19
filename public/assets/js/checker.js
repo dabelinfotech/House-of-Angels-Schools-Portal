@@ -150,7 +150,7 @@ function ratingDots(value) {
 }
 
 function buildSlipHTML(student, results, summary, settings, ratings = {}) {
-  const sn = settings.school_name    || 'EXCELLENCE SECONDARY SCHOOL';
+  const sn = settings.school_name    || 'HOUSE OF ANGEL SCHOOLS';
   const sa = settings.school_address || '';
   const sp = settings.school_phone   || '';
   const se = settings.school_email   || '';
@@ -177,7 +177,7 @@ function buildSlipHTML(student, results, summary, settings, ratings = {}) {
     <!-- School Header -->
     <div class="slip-header">
       <div class="school-crest-large">
-        <div class="crest-placeholder">SCHOOL<br>LOGO</div>
+        <img src="/assets/images/school-logo.png" alt="School Logo" style="width:70px;height:70px;object-fit:contain;">
       </div>
       <div class="school-info">
         <div class="school-name">${escHtml(sn)}</div>
