@@ -9,6 +9,7 @@ const pool = require('./database');
 const app = express();
 const PORT = process.env.PORT || 3002;
 
+app.set('trust proxy', 1); // Required for secure cookies behind Vercel's proxy
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,6 +27,7 @@ app.use(session({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
+    sameSite: 'lax',
     maxAge: 8 * 60 * 60 * 1000 // 8 hours
   }
 }));
