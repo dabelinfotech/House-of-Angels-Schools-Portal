@@ -9,7 +9,7 @@ const db = require('../database');
 const { requireAuth } = require('../middleware/auth');
 
 const upload = multer({
-  dest: 'uploads/',
+  dest: process.env.VERCEL ? '/tmp' : 'uploads/',
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (file.mimetype.includes('spreadsheet') || file.originalname.match(/\.(xlsx|xls|csv)$/i)) {

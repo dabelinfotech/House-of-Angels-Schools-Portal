@@ -1,8 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
 const path = require('path');
+const pool = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -13,7 +15,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'nursery-primary-portal-fallback-secret',
+  store: new pgSession({
+    pool,
+    tableName: 'user_sessions',
+    createTableIfMissing: true,
+  }),
+  secret: process.env.SESSION_SECRET || 'hoa-portal-fallback-secret',
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -24,9 +31,9 @@ app.use(session({
 }));
 
 // API routes
-app.use('/api/auth', require('./routes/auth'));
+app.use('/api/auth',    require('./routes/auth'));
 app.use('/api/results', require('./routes/results'));
-app.use('/api/admin', require('./routes/admin'));
+app.use('/api/admin',   require('./routes/admin'));
 
 // Admin page routes
 app.get('/admin', (req, res) => {
@@ -41,12 +48,17 @@ app.get('/{*path}', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`\n========================================`);
-  console.log(`  House of Angel Schools Result Portal`);
-  console.log(`========================================`);
-  console.log(`  URL:   http://localhost:${PORT}`);
-  console.log(`  Admin: http://localhost:${PORT}/admin`);
-  console.log(`  Login: admin / admin123`);
-  console.log(`========================================\n`);
-});
+// Start server locally (Vercel ignores this and uses module.exports instead)
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`\n========================================`);
+    console.log(`  House of Angel Schools Result Portal`);
+    console.log(`========================================`);
+    console.log(`  URL:   http://localhost:${PORT}`);
+    console.log(`  Admin: http://localhost:${PORT}/admin`);
+    console.log(`  Login: admin / admin123`);
+    console.log(`========================================\n`);
+  });
+}
+
+module.exports = app;
