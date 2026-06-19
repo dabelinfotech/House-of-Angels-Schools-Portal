@@ -1,8 +1,11 @@
 {
-  "name": "nursery-primary-result-portal",
+  "name": "house-of-angel-schools-portal",
   "version": "1.0.0",
-  "description": "Nursery & Primary School Result Portal with PIN Checker, Admin Dashboard & Bulk Upload",
+  "description": "House of Angel Schools Result Portal with PIN Checker, Admin Dashboard & Bulk Upload",
   "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
