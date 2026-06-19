@@ -21,36 +21,42 @@ const upload = multer({
 });
 
 const CLASS_ARMS = [
-  'NRS1A','NRS1B',
-  'NRS2A','NRS2B',
-  'NRS3A','NRS3B',
-  'PRI1A','PRI1B',
-  'PRI2A','PRI2B',
-  'PRI3A','PRI3B',
-  'PRI4A','PRI4B',
-  'PRI5A','PRI5B',
-  'PRI6A','PRI6B',
+  'P.G A','P.G B','P.G C','P.G D',
+  'K.G 1A','K.G 1B','K.G 1C','K.G 1D',
+  'K.G 2A','K.G 2B','K.G 2C','K.G 2D',
+  'Nursery 1A','Nursery 1B','Nursery 1C','Nursery 1D',
+  'Nursery 2A','Nursery 2B','Nursery 2C','Nursery 2D',
+  'Basic 1A','Basic 1B','Basic 1C','Basic 1D',
+  'Basic 2A','Basic 2B','Basic 2C','Basic 2D',
+  'Basic 3A','Basic 3B','Basic 3C','Basic 3D',
+  'Basic 4A','Basic 4B','Basic 4C','Basic 4D',
+  'Basic 5A','Basic 5B','Basic 5C','Basic 5D',
+  'Basic 6A','Basic 6B','Basic 6C','Basic 6D',
 ];
 
-const SUBJECTS = [
-  'Mathematics',
-  'English Language',
-  'Basic Science and Technology',
-  'National Value Education',
-  'Pre Vocational Studies',
-  'Nigerian Language',
-  'French',
-  'Phonics',
-  'Handwriting',
-  'Verbal Reasoning',
-  'Quantitative Reasoning',
-  'Christian Religion Studies',
-  'Vocational Studies',
-  'Cultural and Creative Arts',
+const PRESCHOOL_SUBJECTS = [
+  'Mathematics', 'English Language', 'Phonics', 'Handwriting',
+  'Creative Arts', 'Social Habits'
+];
+
+const NURSERY_SUBJECTS = [
+  'Mathematics', 'English Language', 'Phonics', 'Handwriting',
+  'Basic Science', 'Social Studies', 'Cultural and Creative Arts', 'Social Habits'
+];
+
+const PRIMARY_SUBJECTS = [
+  'Mathematics', 'English Language', 'Basic Science and Technology',
+  'Social Studies', 'Cultural and Creative Arts', 'Physical and Health Education',
+  'Civic Education', 'Yoruba Language', 'Christian Religious Studies',
+  'Handwriting', 'Verbal Reasoning', 'Quantitative Reasoning'
 ];
 
 function getSubjectsForClass(cls) {
-  return SUBJECTS;
+  if (!cls) return PRIMARY_SUBJECTS;
+  const c = String(cls).trim();
+  if (c.startsWith('P.G') || c.startsWith('K.G')) return PRESCHOOL_SUBJECTS;
+  if (c.startsWith('Nursery')) return NURSERY_SUBJECTS;
+  return PRIMARY_SUBJECTS;
 }
 
 function calculateGrade(total) {
@@ -82,11 +88,14 @@ router.get('/me', requireAuth, (req, res) => {
   const admin = db.prepare('SELECT id, username, full_name, role FROM admins WHERE id = ?').get(req.session.adminId);
   if (!admin) return res.status(401).json({ success: false });
   let assignedSubjects = [];
+  let assignedClasses = [];
   if (admin.role === 'staff') {
     assignedSubjects = db.prepare('SELECT subject FROM subject_assignments WHERE admin_id = ?')
       .all(req.session.adminId).map(r => r.subject);
+    assignedClasses = db.prepare('SELECT class FROM class_assignments WHERE admin_id = ?')
+      .all(req.session.adminId).map(r => r.class);
   }
-  res.json({ success: true, admin: { ...admin, assignedSubjects } });
+  res.json({ success: true, admin: { ...admin, assignedSubjects, assignedClasses } });
 });
 
 // ─── Dashboard Stats ──────────────────────────────────────────────────────────
@@ -185,13 +194,20 @@ router.post('/results', requireAuth, (req, res) => {
     return res.status(400).json({ success: false, message: 'Student, subject, session, and term are required.' });
   }
 
-  // Staff can only upload results for their assigned subjects
+  // Staff permission: check subject and class restrictions
   if (req.session.adminRole === 'staff') {
-    const assigned = db.prepare(
-      'SELECT id FROM subject_assignments WHERE admin_id = ? AND subject = ?'
-    ).get(req.session.adminId, subject);
-    if (!assigned) {
+    const staffSubjects = db.prepare('SELECT subject FROM subject_assignments WHERE admin_id = ?')
+      .all(req.session.adminId).map(r => r.subject);
+    const staffClasses = db.prepare('SELECT class FROM class_assignments WHERE admin_id = ?')
+      .all(req.session.adminId).map(r => r.class);
+    if (!staffSubjects.length && !staffClasses.length) {
+      return res.status(403).json({ success: false, message: 'You have no upload permissions assigned.' });
+    }
+    if (staffSubjects.length && !staffSubjects.includes(subject)) {
       return res.status(403).json({ success: false, message: 'You are not assigned to upload results for this subject.' });
+    }
+    if (staffClasses.length && !staffClasses.includes(cls)) {
+      return res.status(403).json({ success: false, message: 'You are not assigned to upload results for this class.' });
     }
   }
 
@@ -271,6 +287,7 @@ router.post('/upload-results', requireAuth, upload.single('file'), async (req, r
 
     let processed = 0, skipped = 0;
     const errors = [];
+    let staffSubjects = null, staffClasses = null;
 
     const upsertResult = db.prepare(`
       INSERT INTO results (student_id, subject, ca1, ca2, exam, total, grade, remark, session, term, class)
@@ -297,6 +314,16 @@ router.post('/upload-results', requireAuth, upload.single('file'), async (req, r
         if (!session) { errors.push(`Row ${rowNum}: Missing session.`); skipped++; continue; }
         if (!term) { errors.push(`Row ${rowNum}: Missing term.`); skipped++; continue; }
 
+        // Staff permission check per row
+        if (staffSubjects !== null) {
+          if (staffSubjects.length && !staffSubjects.includes(subject)) {
+            errors.push(`Row ${rowNum}: Not authorized for subject: ${subject}`); skipped++; continue;
+          }
+          if (staffClasses && staffClasses.length && cls && !staffClasses.includes(cls)) {
+            errors.push(`Row ${rowNum}: Not authorized for class: ${cls}`); skipped++; continue;
+          }
+        }
+
         // Find or create student
         let student = db.prepare('SELECT * FROM students WHERE admission_number = ?').get(admissionNo);
         if (!student) {
@@ -316,6 +343,17 @@ router.post('/upload-results', requireAuth, upload.single('file'), async (req, r
         processed++;
       }
     });
+
+    if (req.session.adminRole === 'staff') {
+      staffSubjects = db.prepare('SELECT subject FROM subject_assignments WHERE admin_id = ?')
+        .all(req.session.adminId).map(r => r.subject);
+      staffClasses = db.prepare('SELECT class FROM class_assignments WHERE admin_id = ?')
+        .all(req.session.adminId).map(r => r.class);
+      if (!staffSubjects.length && !staffClasses.length) {
+        if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+        return res.status(403).json({ success: false, message: 'You have no upload permissions assigned.' });
+      }
+    }
 
     processRows(data);
 
@@ -516,7 +554,8 @@ router.get('/classes', requireAuth, (req, res) => {
 // ─── Subjects List ────────────────────────────────────────────────────────────
 router.get('/subjects', requireAuth, (req, res) => {
   const subjects = getSubjectsForClass(req.query.class);
-  res.json({ success: true, subjects, all: SUBJECTS });
+  const all = [...new Set([...PRESCHOOL_SUBJECTS, ...NURSERY_SUBJECTS, ...PRIMARY_SUBJECTS])];
+  res.json({ success: true, subjects, preschool: PRESCHOOL_SUBJECTS, nursery: NURSERY_SUBJECTS, primary: PRIMARY_SUBJECTS, all });
 });
 
 // ─── Staff Subject Assignments ────────────────────────────────────────────────
@@ -548,6 +587,35 @@ router.put('/staff-assignments/:adminId', requireAuth, (req, res) => {
   }
 });
 
+// ─── Staff Class Assignments ──────────────────────────────────────────────────
+router.get('/class-assignments/:adminId', requireAuth, (req, res) => {
+  const classes = db.prepare('SELECT class FROM class_assignments WHERE admin_id = ?')
+    .all(req.params.adminId).map(r => r.class);
+  res.json({ success: true, classes });
+});
+
+router.put('/class-assignments/:adminId', requireAuth, (req, res) => {
+  if (req.session.adminRole !== 'superadmin' && req.session.adminRole !== 'admin') {
+    return res.status(403).json({ success: false, message: 'Insufficient permissions.' });
+  }
+  const { classes } = req.body;
+  const adminId = parseInt(req.params.adminId);
+  const admin = db.prepare('SELECT id FROM admins WHERE id = ?').get(adminId);
+  if (!admin) return res.status(404).json({ success: false, message: 'Staff member not found.' });
+  try {
+    db.transaction(() => {
+      db.prepare('DELETE FROM class_assignments WHERE admin_id = ?').run(adminId);
+      if (Array.isArray(classes) && classes.length) {
+        const ins = db.prepare('INSERT OR IGNORE INTO class_assignments (admin_id, class) VALUES (?, ?)');
+        classes.forEach(c => ins.run(adminId, c));
+      }
+    })();
+    res.json({ success: true, message: 'Class assignments updated.' });
+  } catch (e) {
+    res.status(500).json({ success: false, message: 'Error updating class assignments: ' + e.message });
+  }
+});
+
 // ─── Admin Management ─────────────────────────────────────────────────────────
 router.get('/admins', requireAuth, (req, res) => {
   if (req.session.adminRole !== 'superadmin') {
@@ -555,9 +623,13 @@ router.get('/admins', requireAuth, (req, res) => {
   }
   const admins = db.prepare('SELECT id, username, full_name, role, created_at FROM admins').all();
   admins.forEach(a => {
-    a.assignedSubjects = a.role === 'staff'
-      ? db.prepare('SELECT subject FROM subject_assignments WHERE admin_id = ?').all(a.id).map(r => r.subject)
-      : [];
+    if (a.role === 'staff') {
+      a.assignedSubjects = db.prepare('SELECT subject FROM subject_assignments WHERE admin_id = ?').all(a.id).map(r => r.subject);
+      a.assignedClasses  = db.prepare('SELECT class FROM class_assignments WHERE admin_id = ?').all(a.id).map(r => r.class);
+    } else {
+      a.assignedSubjects = [];
+      a.assignedClasses  = [];
+    }
   });
   res.json({ success: true, admins });
 });

@@ -133,6 +133,15 @@ db.exec(`
     FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE CASCADE,
     UNIQUE(admin_id, subject)
   );
+
+  CREATE TABLE IF NOT EXISTS class_assignments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    admin_id INTEGER NOT NULL,
+    class TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE CASCADE,
+    UNIQUE(admin_id, class)
+  );
 `);
 
 // Seed default admin

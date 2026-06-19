@@ -204,21 +204,20 @@ function populateAllClassDropdowns() {
     el.innerHTML = `<option value="">${defaultLabel}</option>`;
 
     // Group by level
-    const nrs = cachedClasses.filter(c => c.startsWith('NRS'));
-    const pri = cachedClasses.filter(c => c.startsWith('PRI'));
-
-    if (nrs.length) {
+    const levels = [
+      { label: 'Playgroup',    prefix: 'P.G' },
+      { label: 'Kindergarten', prefix: 'K.G' },
+      { label: 'Nursery',      prefix: 'Nursery' },
+      { label: 'Primary',      prefix: 'Basic' },
+    ];
+    levels.forEach(({ label, prefix }) => {
+      const cls = cachedClasses.filter(c => c.startsWith(prefix));
+      if (!cls.length) return;
       const grp = document.createElement('optgroup');
-      grp.label = 'Nursery';
-      nrs.forEach(c => { const o = document.createElement('option'); o.value = o.textContent = c; grp.appendChild(o); });
+      grp.label = label;
+      cls.forEach(c => { const o = document.createElement('option'); o.value = o.textContent = c; grp.appendChild(o); });
       el.appendChild(grp);
-    }
-    if (pri.length) {
-      const grp = document.createElement('optgroup');
-      grp.label = 'Primary';
-      pri.forEach(c => { const o = document.createElement('option'); o.value = o.textContent = c; grp.appendChild(o); });
-      el.appendChild(grp);
-    }
+    });
   });
 }
 
@@ -1088,14 +1087,15 @@ async function loadAdminsList() {
             <span class="staff-role-badge staff-role-${a.role}">${esc(a.role)}</span>
           </div>
           <div style="display:flex;gap:0.4rem">
-            ${a.role === 'staff' ? `<button class="btn-secondary btn-sm" onclick="openEditAssignmentsModal(${a.id},'${esc(a.full_name || a.username)}')">Subjects</button>` : ''}
+            ${a.role === 'staff' ? `<button class="btn-secondary btn-sm" onclick="openEditAssignmentsModal(${a.id},'${esc(a.full_name || a.username)}')">Assignments</button>` : ''}
             <button class="btn-danger btn-sm" onclick="deleteAdmin(${a.id})">Del</button>
           </div>
         </div>
-        ${a.role === 'staff' && a.assignedSubjects && a.assignedSubjects.length
-          ? `<div style="margin-top:0.3rem;font-size:0.72rem;color:#64748b">${a.assignedSubjects.map(s => `<span class="staff-subj-tag">${esc(s)}</span>`).join('')}</div>`
-          : (a.role === 'staff' ? '<div style="margin-top:0.25rem;font-size:0.72rem;color:#ef4444">No subjects assigned yet</div>' : '')
-        }
+        ${a.role === 'staff' ? `<div style="margin-top:0.3rem;font-size:0.72rem;color:#64748b">
+          ${(a.assignedSubjects||[]).map(s => `<span class="staff-subj-tag">${esc(s)}</span>`).join('')}
+          ${(a.assignedClasses||[]).map(c => `<span class="staff-cls-tag">${esc(c)}</span>`).join('')}
+          ${!(a.assignedSubjects||[]).length && !(a.assignedClasses||[]).length ? '<span style="color:#ef4444">No assignments yet</span>' : ''}
+        </div>` : ''}
       </div>
     `).join('');
   } catch (_) { el.innerHTML = '<p style="font-size:0.83rem;color:#64748b">Could not load admins.</p>'; }
@@ -1117,9 +1117,35 @@ function toggleStaffSubjects(role) {
   if (role === 'staff') {
     wrap.style.display = 'block';
     populateSubjectCheckboxes('staff-subject-checkboxes', []);
+    populateClassCheckboxes('staff-class-checkboxes', []);
   } else {
     wrap.style.display = 'none';
   }
+}
+
+function populateClassCheckboxes(containerId, selectedClasses) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const levels = [
+    { label: 'Playgroup',    prefix: 'P.G' },
+    { label: 'Kindergarten', prefix: 'K.G' },
+    { label: 'Nursery',      prefix: 'Nursery' },
+    { label: 'Primary',      prefix: 'Basic' },
+  ];
+  container.innerHTML = levels.map(({ label, prefix }) => {
+    const cls = cachedClasses.filter(c => c.startsWith(prefix));
+    if (!cls.length) return '';
+    return `<div class="staff-class-group">
+      <span class="staff-class-group-label">${esc(label)}</span>
+      <div class="staff-class-group-items">${cls.map(c => `<label class="staff-subject-check"><input type="checkbox" value="${esc(c)}" ${selectedClasses.includes(c) ? 'checked' : ''}><span>${esc(c)}</span></label>`).join('')}</div>
+    </div>`;
+  }).join('');
+}
+
+function getCheckedClasses(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return [];
+  return [...container.querySelectorAll('input[type=checkbox]:checked')].map(c => c.value);
 }
 
 function populateSubjectCheckboxes(containerId, selectedSubjects) {
@@ -1145,11 +1171,17 @@ async function openEditAssignmentsModal(adminId, adminName) {
   document.getElementById('edit-assign-name').textContent = `Staff: ${adminName}`;
   document.getElementById('edit-assign-msg').style.display = 'none';
   try {
-    const res  = await fetch(`/api/admin/staff-assignments/${adminId}`);
-    const data = await res.json();
-    populateSubjectCheckboxes('edit-subject-checkboxes', data.subjects || []);
+    const [subjRes, clsRes] = await Promise.all([
+      fetch(`/api/admin/staff-assignments/${adminId}`),
+      fetch(`/api/admin/class-assignments/${adminId}`)
+    ]);
+    const subjData = await subjRes.json();
+    const clsData  = await clsRes.json();
+    populateSubjectCheckboxes('edit-subject-checkboxes', subjData.subjects || []);
+    populateClassCheckboxes('edit-class-checkboxes', clsData.classes || []);
   } catch (_) {
     populateSubjectCheckboxes('edit-subject-checkboxes', []);
+    populateClassCheckboxes('edit-class-checkboxes', []);
   }
   document.getElementById('modal-edit-assignments').classList.add('open');
 }
@@ -1157,19 +1189,27 @@ async function openEditAssignmentsModal(adminId, adminName) {
 async function saveStaffAssignments() {
   if (!editingAdminId) return;
   const subjects = getCheckedSubjects('edit-subject-checkboxes');
+  const classes  = getCheckedClasses('edit-class-checkboxes');
   const msgEl    = document.getElementById('edit-assign-msg');
   try {
-    const res  = await fetch(`/api/admin/staff-assignments/${editingAdminId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ subjects })
-    });
-    const data = await res.json();
-    msgEl.className   = data.success ? 'msg-success' : 'msg-error';
-    msgEl.textContent = data.message;
+    const [subjRes, clsRes] = await Promise.all([
+      fetch(`/api/admin/staff-assignments/${editingAdminId}`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subjects })
+      }),
+      fetch(`/api/admin/class-assignments/${editingAdminId}`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ classes })
+      })
+    ]);
+    const subjData = await subjRes.json();
+    const clsData  = await clsRes.json();
+    const ok = subjData.success && clsData.success;
+    msgEl.className   = ok ? 'msg-success' : 'msg-error';
+    msgEl.textContent = ok ? 'Assignments saved.' : (subjData.message || clsData.message);
     msgEl.style.display = 'block';
-    if (data.success) {
-      showToast('Subject assignments saved!', 'success');
+    if (ok) {
+      showToast('Assignments saved!', 'success');
       setTimeout(() => { closeModal('modal-edit-assignments'); loadAdminsList(); editingAdminId = null; }, 700);
     }
   } catch (_) {
@@ -1196,19 +1236,25 @@ async function submitAddAdmin() {
     const data = await res.json();
     if (data.success && role === 'staff') {
       const subjects = getCheckedSubjects('staff-subject-checkboxes');
+      const classes  = getCheckedClasses('staff-class-checkboxes');
       const staffRes = await fetch('/api/admin/admins');
       const staffData = await staffRes.json();
       if (staffData.success) {
         const newStaff = staffData.admins.find(a => a.username === username.toLowerCase());
-        if (newStaff && subjects.length) {
-          await fetch(`/api/admin/staff-assignments/${newStaff.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ subjects })
-          });
+        if (newStaff) {
+          await Promise.all([
+            fetch(`/api/admin/staff-assignments/${newStaff.id}`, {
+              method: 'PUT', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ subjects })
+            }),
+            fetch(`/api/admin/class-assignments/${newStaff.id}`, {
+              method: 'PUT', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ classes })
+            })
+          ]);
         }
       }
-      showToast('Staff account created with subject assignments!', 'success');
+      showToast('Staff account created with assignments!', 'success');
       setTimeout(() => { closeModal('modal-add-admin'); loadAdminsList(); }, 800);
     } else {
       msgEl.className  = data.success ? 'msg-success' : 'msg-error';
@@ -1785,20 +1831,26 @@ function bandLabel(avg) {
 
 function subjectAbbr(name) {
   const map = {
-    'Mathematics':                    'Math',
-    'English Language':               'Eng',
-    'Basic Science and Technology':   'BST',
-    'National Value Education':       'NVE',
-    'Pre Vocational Studies':         'PVS',
-    'Nigerian Language':              'Nig.Lang',
-    'French':                         'French',
-    'Phonics':                        'Phonics',
-    'Handwriting':                    'H/Writing',
-    'Verbal Reasoning':               'V.Reas',
-    'Quantitative Reasoning':         'Q.Reas',
-    'Christian Religion Studies':     'CRS',
-    'Vocational Studies':             'Voc.Std',
-    'Cultural and Creative Arts':     'CCA',
+    // Common
+    'Mathematics':                      'Math',
+    'English Language':                 'Eng',
+    'Yoruba Language':                  'Yoruba',
+    'Handwriting':                      'H/Wrtg',
+    'Creative Arts':                    'C.Arts',
+    'Cultural and Creative Arts':       'CCA',
+    // Pre-school
+    'Phonics':                          'Phonics',
+    'Social Habits':                    'S.Hab',
+    // Nursery
+    'Basic Science':                    'B.Sci',
+    'Social Studies':                   'S.Std',
+    // Primary
+    'Basic Science and Technology':     'BST',
+    'Physical and Health Education':    'PHE',
+    'Civic Education':                  'Civic',
+    'Christian Religious Studies':      'CRS',
+    'Verbal Reasoning':                 'V.Reas',
+    'Quantitative Reasoning':           'Q.Reas',
   };
   return map[name] || name.split(' ')[0];
 }

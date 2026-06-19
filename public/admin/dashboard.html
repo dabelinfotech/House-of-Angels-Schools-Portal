@@ -709,13 +709,16 @@
       <label>Role</label>
       <select id="new-admin-role" class="admin-input" onchange="toggleStaffSubjects(this.value)">
         <option value="admin">Admin (Full Access)</option>
-        <option value="staff">Staff (Subject-Limited)</option>
+        <option value="staff">Staff (Limited Access)</option>
         <option value="superadmin">Super Admin</option>
       </select>
     </div>
     <div id="staff-subject-assign" style="display:none">
-      <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem">Assigned Subjects</label>
+      <p style="font-size:0.77rem;color:#6b7280;margin-bottom:0.6rem">Leave all unchecked to block access. Check subjects and/or classes to restrict what this staff can upload.</p>
+      <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem">Subjects</label>
       <div id="staff-subject-checkboxes" class="staff-subject-grid"></div>
+      <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin:0.5rem 0 0.4rem">Classes</label>
+      <div id="staff-class-checkboxes" class="staff-class-grid"></div>
     </div>
     <div id="add-admin-msg" style="display:none;padding:0.6rem;border-radius:6px;font-size:0.85rem"></div>
     <div class="modal-footer">
@@ -727,13 +730,16 @@
 
 <!-- Edit Staff Assignments Modal -->
 <div class="modal-overlay" id="modal-edit-assignments">
-  <div class="modal">
+  <div class="modal modal-lg">
     <div class="modal-header">
-      <h3>Edit Subject Assignments</h3>
+      <h3>Edit Assignments</h3>
       <button class="modal-close" onclick="closeModal('modal-edit-assignments')">✕</button>
     </div>
     <p id="edit-assign-name" style="font-size:0.85rem;color:#64748b;margin-bottom:0.8rem"></p>
+    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:0.4rem">Subjects</label>
     <div id="edit-subject-checkboxes" class="staff-subject-grid"></div>
+    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin:0.6rem 0 0.4rem">Classes</label>
+    <div id="edit-class-checkboxes" class="staff-class-grid"></div>
     <div id="edit-assign-msg" style="display:none;padding:0.6rem;border-radius:6px;font-size:0.85rem;margin-top:0.6rem"></div>
     <div class="modal-footer">
       <button type="button" class="btn-secondary" onclick="closeModal('modal-edit-assignments')">Cancel</button>
