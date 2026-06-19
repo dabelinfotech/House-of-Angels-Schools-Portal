@@ -43,7 +43,7 @@ app.get('/{*path}', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`\n========================================`);
-  console.log(`  Nursery & Primary Result Portal`);
+  console.log(`  House of Angel Schools Result Portal`);
   console.log(`========================================`);
   console.log(`  URL:   http://localhost:${PORT}`);
   console.log(`  Admin: http://localhost:${PORT}/admin`);

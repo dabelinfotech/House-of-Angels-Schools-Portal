@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════════
    PRINT STYLES — WAEC/NECO Style Result Slip
    ═══════════════════════════════════════════════════════════════════ */
 
@@ -38,14 +38,14 @@
 
   .result-slip {
     box-shadow: none !important;
-    border: 2pt solid #006400 !important;
+    border: 2pt solid #1a2f8c !important;
     border-radius: 0 !important;
     page-break-inside: avoid;
   }
 
   /* Header */
   .slip-header {
-    background: #006400 !important;
+    background: #1a2f8c !important;
     color: white !important;
     padding: 8mm 10mm !important;
   }
@@ -75,7 +75,7 @@
   .results-table { font-size: 9pt !important; border-collapse: collapse !important; }
 
   .results-table thead tr {
-    background: #006400 !important;
+    background: #1a2f8c !important;
     color: white !important;
   }
 
@@ -104,22 +104,22 @@
 
   /* Summary band */
   .summary-band {
-    background: #006400 !important;
+    background: #1a2f8c !important;
     color: white !important;
     padding: 4mm 10mm !important;
   }
 
   .summary-label { font-size: 7pt !important; color: rgba(255,255,255,0.8) !important; }
   .summary-value { font-size: 10pt !important; font-weight: bold !important; }
-  .summary-item.highlight .summary-value { color: #FFD700 !important; }
+  .summary-item.highlight .summary-value { color: #cc1818 !important; }
 
   /* Grade key */
   .grade-key {
     padding: 3mm 8mm !important;
     font-size: 7.5pt !important;
     background: #f8f8f8 !important;
-    border-top: 0.5pt solid #006400 !important;
-    border-bottom: 1pt solid #006400 !important;
+    border-top: 0.5pt solid #1a2f8c !important;
+    border-bottom: 1pt solid #1a2f8c !important;
   }
 
   /* Remarks */
@@ -129,14 +129,14 @@
   }
 
   .stamp-circle {
-    border: 1.5pt dashed #006400 !important;
-    color: #006400 !important;
+    border: 1.5pt dashed #1a2f8c !important;
+    color: #1a2f8c !important;
     opacity: 0.5 !important;
   }
 
   /* Footer */
   .slip-footer {
-    background: #006400 !important;
+    background: #1a2f8c !important;
     padding: 3mm 10mm !important;
   }
 
@@ -145,8 +145,8 @@
   /* Affective traits & psychomotor */
   .traits-section {
     grid-template-columns: 1fr 1fr auto !important;
-    border-top: 1pt solid #006400 !important;
-    border-bottom: 1pt solid #006400 !important;
+    border-top: 1pt solid #1a2f8c !important;
+    border-bottom: 1pt solid #1a2f8c !important;
     page-break-inside: avoid;
   }
 
@@ -162,14 +162,14 @@
   .traits-table th {
     padding: 2pt 3pt !important;
     font-size: 7pt !important;
-    background: #006400 !important;
+    background: #1a2f8c !important;
     color: white !important;
-    border: 0.5pt solid #004d00 !important;
+    border: 0.5pt solid #0d1d6b !important;
   }
 
   .traits-table td {
     padding: 2pt 3pt !important;
-    border: 0.5pt solid #d1e8d1 !important;
+    border: 0.5pt solid #d0dbf5 !important;
     font-size: 7.5pt !important;
   }
 
@@ -179,7 +179,8 @@
 
   /* Watermark visible in print */
   .watermark {
-    color: rgba(0,100,0,0.05) !important;
+    color: rgba(26,47,140,0.05) !important;
     font-size: 55pt !important;
   }
 }
+

@@ -156,7 +156,7 @@ if (!adminExists) {
 // Seed default school settings
 const defaults = [
   ['school_name', 'HOUSE OF ANGEL SCHOOLS'],
-  ['school_motto', 'Excelling for Greatness'],
+  ['school_motto', 'Excellence for Beginners'],
   ['school_address', ''],
   ['school_phone', ''],
   ['school_email', ''],

@@ -1,16 +1,16 @@
-/* ═══════════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════════
    SCHOOL RESULT PORTAL — Student Frontend Styles
    ═══════════════════════════════════════════════════════════════════ */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --green-dark:   #004d00;
-  --green-main:   #006400;
-  --green-mid:    #007d00;
-  --green-light:  #00a550;
-  --gold:         #FFD700;
-  --gold-dark:    #E6B800;
+  --green-dark:   #0d1d6b;
+  --green-main:   #1a2f8c;
+  --green-mid:    #2040a8;
+  --green-light:  #3555c8;
+  --gold:         #cc1818;
+  --gold-dark:    #a01010;
   --white:        #ffffff;
   --gray-50:      #f8fafc;
   --gray-100:     #f1f5f9;
@@ -26,7 +26,7 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: #f0f4f0;
+  background: #f0f4ff;
   color: #1e293b;
   line-height: 1.5;
 }
@@ -35,7 +35,7 @@ body {
 
 #checker-section {
   min-height: 100vh;
-  background: linear-gradient(135deg, #001a00 0%, #003300 30%, #004d00 70%, #006400 100%);
+  background: linear-gradient(135deg, #050d3d 0%, #0a1556 30%, #0d1d6b 70%, #1a2f8c 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,8 +47,8 @@ body {
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 15% 50%, rgba(255,215,0,0.05) 0%, transparent 50%),
-    radial-gradient(circle at 85% 20%, rgba(0,165,80,0.1) 0%, transparent 50%);
+    radial-gradient(circle at 15% 50%, rgba(204,24,24,0.05) 0%, transparent 50%),
+    radial-gradient(circle at 85% 20%, rgba(53,85,200,0.1) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -99,7 +99,7 @@ body {
 
 .brand-text p {
   font-size: 0.78rem;
-  color: rgba(255,215,0,0.85);
+  color: rgba(204,24,24,0.85);
   font-weight: 400;
   letter-spacing: 0.03em;
   margin-top: 0.2rem;
@@ -159,7 +159,7 @@ body {
 .form-field input:focus {
   border-color: var(--green-main);
   background: white;
-  box-shadow: 0 0 0 3px rgba(0,100,0,0.1);
+  box-shadow: 0 0 0 3px rgba(26,47,140,0.1);
 }
 
 .input-wrapper { position: relative; }
@@ -206,7 +206,7 @@ body {
   margin-top: 0.5rem;
 }
 
-.btn-check:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,100,0,0.3); }
+.btn-check:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,47,140,0.3); }
 .btn-check:active { transform: scale(0.99); }
 .btn-check:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
@@ -344,7 +344,7 @@ body {
   transform: translate(-50%, -50%) rotate(-35deg);
   font-size: 4.5rem;
   font-weight: 900;
-  color: rgba(0,100,0,0.04);
+  color: rgba(26,47,140,0.04);
   white-space: nowrap;
   pointer-events: none;
   z-index: 0;
@@ -401,15 +401,15 @@ body {
 
 .school-contact {
   font-size: 0.72rem;
-  color: rgba(255,215,0,0.85);
+  color: rgba(204,24,24,0.85);
   margin-top: 0.15rem;
 }
 
 .slip-title {
   margin-top: 0.5rem;
   display: inline-block;
-  background: rgba(255,215,0,0.15);
-  border: 1px solid rgba(255,215,0,0.4);
+  background: rgba(204,24,24,0.15);
+  border: 1px solid rgba(204,24,24,0.4);
   border-radius: 4px;
   padding: 0.3rem 1rem;
 }
@@ -436,7 +436,7 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 0.65rem;
-  color: rgba(255,215,0,0.7);
+  color: rgba(204,24,24,0.7);
   font-weight: 600;
   letter-spacing: 0.05em;
   background: rgba(255,255,255,0.05);
@@ -515,12 +515,12 @@ body {
 .th-grade { width: 60px; }
 .th-remark { min-width: 100px; text-align: left !important; }
 
-.results-table tbody tr:nth-child(even) { background: #f0f7f0; }
-.results-table tbody tr:hover { background: #e8f5e8; }
+.results-table tbody tr:nth-child(even) { background: #f0f4ff; }
+.results-table tbody tr:hover { background: #eaf0ff; }
 
 .results-table td {
   padding: 0.5rem 0.65rem;
-  border: 1px solid #d1e8d1;
+  border: 1px solid #d0dbf5;
   color: var(--gray-800);
   font-size: 0.83rem;
 }
@@ -534,12 +534,12 @@ body {
 .tfoot-total td,
 .tfoot-average td {
   padding: 0.45rem 0.6rem;
-  border: 1px solid #b6d4b6;
+  border: 1px solid #b0c0e8;
   font-size: 0.82rem;
 }
 
 .tfoot-total {
-  background: #006400;
+  background: #1a2f8c;
   color: #ffffff;
 }
 .tfoot-total .td-total-label {
@@ -548,17 +548,17 @@ body {
   letter-spacing: 0.04em;
   font-size: 0.8rem;
   color: #ffffff;
-  border-color: #004d00;
+  border-color: #0d1d6b;
 }
 .tfoot-total .td-total {
-  background: #FFD700;
-  color: #006400;
+  background: #cc1818;
+  color: #1a2f8c;
   font-size: 1rem;
-  border-color: #004d00;
+  border-color: #0d1d6b;
 }
 
 .tfoot-average {
-  background: #f0f7f0;
+  background: #f0f4ff;
   color: #1e293b;
 }
 .tfoot-average .td-total-label {
@@ -566,24 +566,24 @@ body {
   font-weight: 700;
   letter-spacing: 0.04em;
   font-size: 0.8rem;
-  color: #006400;
-  border-color: #b6d4b6;
+  color: #1a2f8c;
+  border-color: #b0c0e8;
 }
 .tfoot-average .td-total {
   font-size: 0.95rem;
-  color: #006400;
-  border-color: #b6d4b6;
+  color: #1a2f8c;
+  border-color: #b0c0e8;
 }
 .tfoot-average .td-remark {
   font-style: italic;
-  color: #166534;
+  color: #1a2f8c;
   font-size: 0.8rem;
   font-weight: 600;
-  border-color: #b6d4b6;
+  border-color: #b0c0e8;
 }
 
-.grade-excellent  { background: #dcfce7 !important; color: #166534 !important; }
-.grade-very-good  { background: #d1fae5 !important; color: #065f46 !important; }
+.grade-excellent  { background: #dce4ff !important; color: #1a2f8c !important; }
+.grade-very-good  { background: #d4ddff !important; color: #0d1d6b !important; }
 .grade-credit     { background: #dbeafe !important; color: #1e40af !important; }
 .grade-pass       { background: #fef9c3 !important; color: #854d0e !important; }
 .grade-fail       { background: #fee2e2 !important; color: #991b1b !important; }
@@ -611,8 +611,8 @@ body {
 }
 
 .summary-item.highlight {
-  background: rgba(255,215,0,0.2);
-  border-color: rgba(255,215,0,0.4);
+  background: rgba(204,24,24,0.2);
+  border-color: rgba(204,24,24,0.4);
 }
 
 .summary-label {
@@ -637,8 +637,8 @@ body {
 /* Grade Key */
 .grade-key {
   padding: 0.6rem 1.5rem;
-  background: #f8faf8;
-  border-top: 1px solid #d1e8d1;
+  background: #f8f9ff;
+  border-top: 1px solid #d0dbf5;
   border-bottom: 2px solid var(--green-main);
   display: flex;
   flex-wrap: wrap;
@@ -670,7 +670,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr auto;
   gap: 1.5rem;
-  border-top: 1px solid #d1e8d1;
+  border-top: 1px solid #d0dbf5;
   position: relative;
   z-index: 1;
 }
@@ -729,7 +729,7 @@ body {
 .traits-box,
 .traits-key {
   padding: 0.65rem 1rem;
-  border-right: 1px solid #b6d4b6;
+  border-right: 1px solid #b0c0e8;
 }
 
 .traits-key { border-right: none; min-width: 120px; }
@@ -740,10 +740,10 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--green-dark);
-  background: #e8f5e8;
+  background: #eaf0ff;
   padding: 0.3rem 0.5rem;
   margin: -0.65rem -1rem 0.5rem;
-  border-bottom: 1px solid #b6d4b6;
+  border-bottom: 1px solid #b0c0e8;
   text-align: center;
 }
 
@@ -765,11 +765,11 @@ body {
   border: 1px solid rgba(255,255,255,0.2);
 }
 
-.traits-table tbody tr:nth-child(even) { background: #f5fcf5; }
+.traits-table tbody tr:nth-child(even) { background: #f5f7ff; }
 
 .traits-table td {
   padding: 0.25rem 0.4rem;
-  border: 1px solid #d1e8d1;
+  border: 1px solid #d0dbf5;
   vertical-align: middle;
 }
 
@@ -813,6 +813,7 @@ body {
   letter-spacing: 0.03em;
 }
 .site-footer strong {
-  color: #16a34a;
+  color: #1a2f8c;
   font-weight: 700;
 }
+
