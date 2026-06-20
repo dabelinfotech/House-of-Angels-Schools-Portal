@@ -122,6 +122,18 @@ body {
 
 .nav-item svg { flex-shrink: 0; }
 
+.nav-badge {
+  margin-left: auto;
+  background: #cc1818;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 1px 6px;
+  min-width: 18px;
+  text-align: center;
+}
+
 .sidebar-user {
   padding: 1rem;
   border-top: 1px solid rgba(255,255,255,0.07);

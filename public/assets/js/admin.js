@@ -27,6 +27,7 @@ async function checkAuth() {
     document.getElementById('admin-role').textContent = data.admin.role === 'superadmin' ? 'Super Admin' : 'Admin';
     document.getElementById('overview-admin-name').textContent = name;
     document.getElementById('user-initial').textContent = name.charAt(0).toUpperCase();
+    updateSlipBadge();
   } catch (e) {
     window.location.href = '/admin';
   }
@@ -43,6 +44,7 @@ const sectionTitles = {
   tabulation:  'Tabulation Sheet',
   analysis:    'Performance Analysis',
   classview:   'Class Result Viewer',
+  slips:       'Payment Slips',
   settings:    'Settings'
 };
 
@@ -64,6 +66,7 @@ function showSection(name) {
   if (name === 'tabulation') populateTabulationDropdowns();
   if (name === 'analysis') populateAnalysisDropdowns();
   if (name === 'classview') populateClassViewDropdowns();
+  if (name === 'slips')    loadPaymentSlips();
   if (name === 'settings') loadSettingsForm();
 
   // Close sidebar on mobile
@@ -1343,6 +1346,142 @@ async function updateEmail() {
   } catch (_) {
     msgEl.className = 'msg-error'; msgEl.textContent = 'Error saving email.'; msgEl.style.display = 'block';
   }
+}
+
+// ─── Payment Slips ─────────────────────────────────────────────────────────────
+
+let currentSlipId = null;
+
+async function loadPaymentSlips() {
+  const status  = document.getElementById('slip-filter-status')?.value  || 'all';
+  const session = document.getElementById('slip-filter-session')?.value || '';
+  const term    = document.getElementById('slip-filter-term')?.value    || '';
+  const cls     = document.getElementById('slip-filter-class')?.value   || '';
+
+  const params = new URLSearchParams();
+  if (status  && status !== 'all') params.set('status',  status);
+  if (session) params.set('session', session);
+  if (term)    params.set('term',    term);
+  if (cls)     params.set('class',   cls);
+
+  const tbody = document.getElementById('slips-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#94a3b8;padding:2rem">Loading…</td></tr>';
+
+  try {
+    const res  = await fetch('/api/slips?' + params.toString());
+    const data = await res.json();
+
+    if (!data.success) { tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#ef4444;padding:2rem">Failed to load slips.</td></tr>'; return; }
+
+    renderSlipsStats(data.slips);
+
+    if (!data.slips.length) {
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#94a3b8;padding:2.5rem">No payment slips found.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = data.slips.map((s, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td style="font-weight:600">${escHtml(s.student_name)}</td>
+        <td><code style="font-size:0.8rem">${escHtml(s.admission_number)}</code></td>
+        <td>${escHtml(s.class)}</td>
+        <td style="font-size:0.82rem">${escHtml(s.session)}<br><span style="color:#6b7280">${escHtml(s.term)}</span></td>
+        <td style="font-size:0.8rem;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escHtml(s.original_name)}">${escHtml(s.original_name)}</td>
+        <td>${slipStatusBadge(s.status)}</td>
+        <td style="font-size:0.78rem;color:#6b7280">${new Date(s.uploaded_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})}</td>
+        <td>
+          <div style="display:flex;gap:0.4rem">
+            <button class="btn-sm btn-primary" onclick="openSlipModal(${s.id},'${escHtml(s.student_name)}','${s.status}','${escHtml(s.notes||'')}')">View</button>
+            <button class="btn-sm btn-danger" onclick="deleteSlip(${s.id})">Delete</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  } catch (_) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#ef4444;padding:2rem">Error loading slips.</td></tr>';
+  }
+}
+
+function renderSlipsStats(slips) {
+  const stats = document.getElementById('slips-stats');
+  if (!stats) return;
+  const total    = slips.length;
+  const pending  = slips.filter(s => s.status === 'pending').length;
+  const verified = slips.filter(s => s.status === 'verified').length;
+  stats.innerHTML = `
+    <div class="stat-card"><div class="stat-number">${total}</div><div class="stat-label">Total Slips</div></div>
+    <div class="stat-card" style="border-left:3px solid #f59e0b"><div class="stat-number" style="color:#f59e0b">${pending}</div><div class="stat-label">Pending Review</div></div>
+    <div class="stat-card" style="border-left:3px solid #22c55e"><div class="stat-number" style="color:#22c55e">${verified}</div><div class="stat-label">Verified</div></div>
+  `;
+}
+
+function slipStatusBadge(status) {
+  const map = {
+    pending:  { bg:'#fef3c7', color:'#92400e', label:'Pending'  },
+    reviewed: { bg:'#dbeafe', color:'#1e40af', label:'Reviewed' },
+    verified: { bg:'#dcfce7', color:'#166534', label:'Verified' },
+  };
+  const s = map[status] || map.pending;
+  return `<span style="background:${s.bg};color:${s.color};padding:2px 8px;border-radius:12px;font-size:0.75rem;font-weight:600">${s.label}</span>`;
+}
+
+function openSlipModal(id, name, status, notes) {
+  currentSlipId = id;
+  document.getElementById('slip-modal-title').textContent    = 'Payment Slip — ' + name;
+  document.getElementById('slip-status-select').value       = status;
+  document.getElementById('slip-notes-input').value         = notes;
+  document.getElementById('slip-iframe').src                = `/api/slips/${id}/view`;
+  document.getElementById('slip-modal-msg').style.display   = 'none';
+  document.getElementById('modal-slip-view').classList.add('open');
+}
+
+async function saveSlipStatus() {
+  if (!currentSlipId) return;
+  const status = document.getElementById('slip-status-select').value;
+  const notes  = document.getElementById('slip-notes-input').value;
+  const msg    = document.getElementById('slip-modal-msg');
+  try {
+    const res  = await fetch(`/api/slips/${currentSlipId}/status`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status, notes })
+    });
+    const data = await res.json();
+    msg.style.cssText = `display:block;background:${data.success?'#dcfce7':'#fee2e2'};color:${data.success?'#166534':'#991b1b'};border-radius:6px;padding:0.5rem 0.75rem;font-size:0.83rem`;
+    msg.textContent = data.message;
+    if (data.success) { showToast('Status updated!', 'success'); loadPaymentSlips(); updateSlipBadge(); }
+  } catch (_) {
+    msg.style.cssText = 'display:block;background:#fee2e2;color:#991b1b;border-radius:6px;padding:0.5rem 0.75rem;font-size:0.83rem';
+    msg.textContent = 'Error saving status.';
+  }
+}
+
+async function deleteSlip(id) {
+  if (!confirm('Delete this payment slip? This cannot be undone.')) return;
+  try {
+    const res  = await fetch(`/api/slips/${id}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (data.success) { showToast('Slip deleted.', 'success'); loadPaymentSlips(); updateSlipBadge(); }
+    else showToast(data.message, 'error');
+  } catch (_) { showToast('Error deleting slip.', 'error'); }
+}
+
+async function updateSlipBadge() {
+  try {
+    const res  = await fetch('/api/slips/count/pending');
+    const data = await res.json();
+    const badge = document.getElementById('slip-badge');
+    if (!badge) return;
+    if (data.count > 0) { badge.textContent = data.count; badge.style.display = 'inline'; }
+    else badge.style.display = 'none';
+  } catch (_) {}
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 // ─── Tabulation Sheet ──────────────────────────────────────────────────────────

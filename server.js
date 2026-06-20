@@ -36,6 +36,7 @@ app.use(session({
 app.use('/api/auth',    require('./routes/auth'));
 app.use('/api/results', require('./routes/results'));
 app.use('/api/admin',   require('./routes/admin'));
+app.use('/api/slips',   require('./routes/slips'));
 
 // Admin page routes
 app.get('/admin', (req, res) => {

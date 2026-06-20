@@ -87,6 +87,23 @@ async function initDB() {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       UNIQUE(admin_id, class)
     );
+
+    CREATE TABLE IF NOT EXISTS payment_slips (
+      id SERIAL PRIMARY KEY,
+      student_id INTEGER REFERENCES students(id) ON DELETE SET NULL,
+      admission_number TEXT NOT NULL,
+      student_name TEXT NOT NULL,
+      class TEXT NOT NULL,
+      session TEXT NOT NULL,
+      term TEXT NOT NULL,
+      original_name TEXT NOT NULL,
+      file_data TEXT NOT NULL,
+      mime_type TEXT NOT NULL DEFAULT 'image/jpeg',
+      file_size INTEGER DEFAULT 0,
+      status TEXT NOT NULL DEFAULT 'pending',
+      notes TEXT,
+      uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
   `);
 
   // Add email + reset-token columns if they don't exist yet (safe on re-run)

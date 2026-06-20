@@ -56,6 +56,11 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 3h18v18H3z" stroke="none"/><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 9h18M9 21V9" stroke="currentColor" stroke-width="2"/></svg>
       Class Viewer
     </a>
+    <a class="nav-item" data-section="slips" onclick="showSection('slips')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="1" y="4" width="22" height="16" rx="2" stroke="currentColor" stroke-width="2"/><line x1="1" y1="10" x2="23" y2="10" stroke="currentColor" stroke-width="2"/></svg>
+      Payment Slips
+      <span class="nav-badge" id="slip-badge" style="display:none"></span>
+    </a>
     <a class="nav-item" data-section="settings" onclick="showSection('settings')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" stroke-width="2"/></svg>
       Settings
@@ -451,6 +456,97 @@
       </div>
     </div>
   </section>
+
+  <!-- ═══════ PAYMENT SLIPS ═══════ -->
+  <section class="content-section" id="section-slips">
+    <div class="page-header">
+      <h2>Payment Slips</h2>
+      <button class="btn-secondary" onclick="loadPaymentSlips()">↻ Refresh</button>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-row" id="slips-stats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.2rem"></div>
+
+    <!-- Filters -->
+    <div class="card" style="padding:1rem;margin-bottom:1rem">
+      <div style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:flex-end">
+        <div>
+          <label style="font-size:0.77rem;color:#6b7280;display:block;margin-bottom:3px">Status</label>
+          <select id="slip-filter-status" class="admin-input" style="padding:0.45rem 0.75rem;min-width:130px" onchange="loadPaymentSlips()">
+            <option value="all">All</option>
+            <option value="pending">Pending</option>
+            <option value="reviewed">Reviewed</option>
+            <option value="verified">Verified</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:0.77rem;color:#6b7280;display:block;margin-bottom:3px">Session</label>
+          <input type="text" id="slip-filter-session" class="admin-input" style="padding:0.45rem 0.75rem;width:120px" placeholder="2024/2025" onchange="loadPaymentSlips()">
+        </div>
+        <div>
+          <label style="font-size:0.77rem;color:#6b7280;display:block;margin-bottom:3px">Term</label>
+          <select id="slip-filter-term" class="admin-input" style="padding:0.45rem 0.75rem;min-width:130px" onchange="loadPaymentSlips()">
+            <option value="">All Terms</option>
+            <option value="First Term">First Term</option>
+            <option value="Second Term">Second Term</option>
+            <option value="Third Term">Third Term</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:0.77rem;color:#6b7280;display:block;margin-bottom:3px">Class</label>
+          <input type="text" id="slip-filter-class" class="admin-input" style="padding:0.45rem 0.75rem;width:110px" placeholder="e.g. Basic 3" onchange="loadPaymentSlips()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card" style="padding:0">
+      <div id="slips-table-wrap" style="overflow-x:auto">
+        <table class="data-table" id="slips-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Student</th>
+              <th>Adm. No.</th>
+              <th>Class</th>
+              <th>Session / Term</th>
+              <th>File</th>
+              <th>Status</th>
+              <th>Uploaded</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="slips-tbody">
+            <tr><td colspan="9" style="text-align:center;color:#94a3b8;padding:2rem">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slip View Modal -->
+  <div class="modal-overlay" id="modal-slip-view">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h3 id="slip-modal-title">Payment Slip</h3>
+        <button class="modal-close" onclick="closeModal('modal-slip-view')">✕</button>
+      </div>
+      <div style="text-align:center;margin-bottom:1rem">
+        <iframe id="slip-iframe" src="" style="width:100%;height:70vh;border:1px solid #e5e7eb;border-radius:6px;background:#f8faff"></iframe>
+      </div>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.75rem">
+        <label style="font-size:0.82rem;font-weight:600;color:#374151;margin-top:0.5rem">Status:</label>
+        <select id="slip-status-select" class="admin-input" style="padding:0.4rem 0.7rem;min-width:130px">
+          <option value="pending">Pending</option>
+          <option value="reviewed">Reviewed</option>
+          <option value="verified">Verified</option>
+        </select>
+        <input type="text" id="slip-notes-input" class="admin-input" style="flex:1;min-width:160px;padding:0.4rem 0.7rem" placeholder="Optional notes…">
+        <button class="btn-primary" onclick="saveSlipStatus()">Save</button>
+      </div>
+      <div id="slip-modal-msg" style="display:none;font-size:0.83rem;padding:0.5rem 0.75rem;border-radius:6px"></div>
+    </div>
+  </div>
 
   <!-- ═══════ SETTINGS ═══════ -->
   <section class="content-section" id="section-settings">

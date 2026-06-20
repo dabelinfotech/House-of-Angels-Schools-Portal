@@ -2,10 +2,14 @@
    Student Result Checker + Result Slip Renderer
    ═══════════════════════════════════════════════════════════════════ */
 
+// Holds student context after result is loaded (used by payment slip upload)
+let currentStudent = null;
+
 document.addEventListener('DOMContentLoaded', () => {
   loadSchoolBranding();
   setupForm();
   setupPinToggle();
+  setupFileInput();
 });
 
 // Load school name for header
@@ -121,21 +125,156 @@ function getAverageRemark(avg) {
 function renderResult(data) {
   const { student, results, summary, settings, ratings = {} } = data;
 
+  currentStudent = student; // store for payment slip upload
+
   document.getElementById('checker-section').style.display = 'none';
   document.getElementById('result-section').style.display  = 'block';
 
   const container = document.getElementById('result-slip-container');
-
   const slip = document.createElement('div');
   slip.className = 'result-slip';
   slip.id = 'result-slip';
-
   slip.innerHTML = buildSlipHTML(student, results, summary, settings, ratings);
   container.innerHTML = '';
   container.appendChild(slip);
 
-  // Update page title
+  // Populate the payment-slip student info panel
+  populatePaymentStudentInfo(student);
+
   document.title = `Result Slip — ${student.name} — ${student.session}`;
+}
+
+// ─── Tab switching ────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('tab-result-panel').style.display  = tab === 'result'  ? 'block' : 'none';
+  document.getElementById('tab-payment-panel').style.display = tab === 'payment' ? 'block' : 'none';
+  document.getElementById('btn-print').style.display         = tab === 'result'  ? 'flex'  : 'none';
+  document.getElementById('tab-result').classList.toggle('active',  tab === 'result');
+  document.getElementById('tab-payment').classList.toggle('active', tab === 'payment');
+}
+
+function populatePaymentStudentInfo(student) {
+  const el = document.getElementById('payment-student-info');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="psi-item"><span class="psi-label">Student Name</span><span class="psi-value">${escHtml(student.name)}</span></div>
+    <div class="psi-item"><span class="psi-label">Admission No.</span><span class="psi-value">${escHtml(student.admission_number)}</span></div>
+    <div class="psi-item"><span class="psi-label">Class</span><span class="psi-value">${escHtml(student.class)}</span></div>
+    <div class="psi-item"><span class="psi-label">Session / Term</span><span class="psi-value">${escHtml(student.session)} · ${escHtml(student.term)}</span></div>
+  `;
+}
+
+// ─── File input + drag-drop ───────────────────────────────────────────────────
+function setupFileInput() {
+  const input    = document.getElementById('slip-file-input');
+  const dropZone = document.getElementById('upload-drop-zone');
+  if (!input || !dropZone) return;
+
+  input.addEventListener('change', () => {
+    if (input.files[0]) showFilePreview(input.files[0]);
+  });
+
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    input.files = dt.files;
+    showFilePreview(file);
+  });
+}
+
+function showFilePreview(file) {
+  document.getElementById('upload-drop-zone').style.display = 'none';
+  document.getElementById('file-preview').style.display     = 'block';
+  document.getElementById('file-name-display').textContent  = file.name;
+  document.getElementById('file-size-display').textContent  = formatBytes(file.size);
+
+  if (file.type === 'application/pdf') {
+    document.getElementById('preview-img').style.display      = 'none';
+    document.getElementById('preview-pdf').style.display      = 'flex';
+    document.getElementById('preview-pdf-name').textContent   = file.name;
+  } else {
+    document.getElementById('preview-pdf').style.display = 'none';
+    const img = document.getElementById('preview-img');
+    img.style.display = 'block';
+    img.src = URL.createObjectURL(file);
+  }
+  // Clear any previous message
+  const msg = document.getElementById('payment-msg');
+  msg.style.display = 'none';
+  msg.className = 'payment-msg';
+}
+
+function clearFileInput() {
+  document.getElementById('slip-file-input').value = '';
+  document.getElementById('file-preview').style.display     = 'none';
+  document.getElementById('upload-drop-zone').style.display = 'block';
+  document.getElementById('preview-img').src = '';
+}
+
+function formatBytes(bytes) {
+  if (bytes < 1024)        return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+// ─── Submit payment slip ──────────────────────────────────────────────────────
+async function submitPaymentSlip() {
+  const input = document.getElementById('slip-file-input');
+  const msg   = document.getElementById('payment-msg');
+  const btn   = document.getElementById('btn-upload-slip');
+
+  msg.style.display = 'none';
+
+  if (!currentStudent) {
+    msg.className = 'payment-msg error'; msg.textContent = 'Student data missing. Please re-check your result first.'; msg.style.display = 'block'; return;
+  }
+  if (!input.files[0]) {
+    msg.className = 'payment-msg error'; msg.textContent = 'Please select a payment slip file.'; msg.style.display = 'block'; return;
+  }
+  if (input.files[0].size > 5 * 1024 * 1024) {
+    msg.className = 'payment-msg error'; msg.textContent = 'File is too large. Maximum size is 5 MB.'; msg.style.display = 'block'; return;
+  }
+
+  btn.disabled = true;
+  document.getElementById('upload-btn-text').style.display = 'none';
+  document.getElementById('upload-btn-spin').style.display = 'flex';
+
+  try {
+    const form = new FormData();
+    form.append('slip',             input.files[0]);
+    form.append('student_id',       currentStudent.id || '');
+    form.append('admission_number', currentStudent.admission_number);
+    form.append('student_name',     currentStudent.name);
+    form.append('class',            currentStudent.class);
+    form.append('session',          currentStudent.session);
+    form.append('term',             currentStudent.term);
+
+    const res  = await fetch('/api/slips/upload', { method: 'POST', body: form });
+    const data = await res.json();
+
+    msg.className = data.success ? 'payment-msg success' : 'payment-msg error';
+    msg.textContent = data.message;
+    msg.style.display = 'block';
+
+    if (data.success) {
+      clearFileInput();
+      btn.disabled = false;
+      document.getElementById('upload-btn-text').style.display = 'inline';
+      document.getElementById('upload-btn-spin').style.display = 'none';
+    }
+  } catch (_) {
+    msg.className = 'payment-msg error'; msg.textContent = 'Connection error. Please try again.'; msg.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    document.getElementById('upload-btn-text').style.display = 'inline';
+    document.getElementById('upload-btn-spin').style.display = 'none';
+  }
 }
 
 const AFFECTIVE_TRAITS   = ['Alertness','Honesty','Neatness','Politeness','Punctuality','Relationship with Others','Reliability'];
