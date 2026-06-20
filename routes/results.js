@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../database');
+const { pool: db } = require('../database');
 
 function calculateGrade(total) {
   if (total >= 75) return { grade: 'A1', remark: 'Excellent' };

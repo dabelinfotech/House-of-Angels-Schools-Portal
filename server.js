@@ -4,7 +4,7 @@ const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const cors = require('cors');
 const path = require('path');
-const pool = require('./database');
+const { pool, dbReady } = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -31,6 +31,9 @@ app.use(session({
     maxAge: 8 * 60 * 60 * 1000 // 8 hours
   }
 }));
+
+// Await DB init on every request (resolves instantly after first success)
+app.use((req, res, next) => { dbReady.then(() => next()).catch(() => next()); });
 
 // API routes
 app.use('/api/auth',    require('./routes/auth'));

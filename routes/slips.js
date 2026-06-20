@@ -1,7 +1,7 @@
 const express  = require('express');
 const router   = express.Router();
 const multer   = require('multer');
-const db       = require('../database');
+const { pool: db } = require('../database');
 const { requireAuth } = require('../middleware/auth');
 
 // Store uploads in memory so we can base64-encode into the DB (Vercel-safe)

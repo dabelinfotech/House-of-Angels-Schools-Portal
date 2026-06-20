@@ -148,11 +148,11 @@ async function initDB() {
   console.log('Database ready.');
 }
 
-initDB().catch(err => {
-  // Log but do NOT call process.exit — that would crash the Vercel Lambda
-  // and mark the entire deployment as failed. Errors here are non-fatal;
-  // tables are usually already created from prior runs.
+// Export a promise so server.js can await DB readiness before serving requests.
+// This prevents race conditions on Vercel cold starts where a login request
+// can arrive before the pool has finished creating tables.
+const dbReady = initDB().catch(err => {
   console.error('Database init failed (non-fatal):', err.message);
 });
 
-module.exports = pool;
+module.exports = { pool, dbReady };

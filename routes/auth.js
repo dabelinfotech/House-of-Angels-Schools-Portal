@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-const db = require('../database');
+const { pool: db } = require('../database');
 const { requireAuth } = require('../middleware/auth');
 const { sendPasswordResetEmail } = require('../mailer');
 

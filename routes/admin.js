@@ -5,7 +5,7 @@ const ExcelJS = require('exceljs');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const fs = require('fs');
-const db = require('../database');
+const { pool: db } = require('../database');
 const { requireAuth } = require('../middleware/auth');
 
 const upload = multer({
