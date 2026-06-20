@@ -35,6 +35,16 @@ app.use(session({
 // Await DB init on every request (resolves instantly after first success)
 app.use((req, res, next) => { dbReady.then(() => next()).catch(() => next()); });
 
+// Diagnostic endpoint — shows real DB error if connection fails
+app.get('/api/ping', async (req, res) => {
+  try {
+    const r = await pool.query('SELECT NOW() as time, current_database() as db');
+    res.json({ ok: true, time: r.rows[0].time, db: r.rows[0].db, env: process.env.NODE_ENV || 'development' });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message, code: e.code });
+  }
+});
+
 // API routes
 app.use('/api/auth',    require('./routes/auth'));
 app.use('/api/results', require('./routes/results'));

@@ -4,9 +4,9 @@ const bcrypt = require('bcryptjs');
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
-  max: process.env.NODE_ENV === 'production' ? 2 : 10,
-  idleTimeoutMillis: 10000,
-  connectionTimeoutMillis: 10000,
+  max: 5,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 30000,
 });
 
 async function initDB() {

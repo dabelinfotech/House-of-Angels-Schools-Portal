@@ -32,7 +32,8 @@ router.post('/login', async (req, res) => {
       });
     });
   } catch (e) {
-    res.status(500).json({ success: false, message: 'Login error.' });
+    console.error('Login DB error:', e.message, e.code);
+    res.status(500).json({ success: false, message: 'Login error: ' + e.message });
   }
 });
 
