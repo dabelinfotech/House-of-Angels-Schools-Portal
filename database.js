@@ -3,7 +3,10 @@ const bcrypt = require('bcryptjs');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false },
+  max: process.env.NODE_ENV === 'production' ? 2 : 10,
+  idleTimeoutMillis: 10000,
+  connectionTimeoutMillis: 10000,
 });
 
 async function initDB() {
@@ -146,8 +149,10 @@ async function initDB() {
 }
 
 initDB().catch(err => {
-  console.error('Database init failed:', err.message);
-  process.exit(1);
+  // Log but do NOT call process.exit — that would crash the Vercel Lambda
+  // and mark the entire deployment as failed. Errors here are non-fatal;
+  // tables are usually already created from prior runs.
+  console.error('Database init failed (non-fatal):', err.message);
 });
 
 module.exports = pool;
